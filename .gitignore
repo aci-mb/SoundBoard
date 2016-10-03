@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/packages
+/src/SoundBoard/bin/Debug
+/src/SoundBoard/obj/Debug
+*.DotSettings.user
+*csproj.user
+*.ncrunchproject
+/src/SoundBoard.Tests/bin/Debug
+/src/SoundBoard.Tests/obj/Debug
+*.ncrunchsolution
