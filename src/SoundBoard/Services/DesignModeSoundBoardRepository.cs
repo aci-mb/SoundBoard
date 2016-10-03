@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AcillatemSoundBoard.Model;
+using AcillatemSoundBoard.Services.SoundImplementation.CsCore;
 
 namespace AcillatemSoundBoard.Services
 {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using AcillatemSoundBoard.Model;
+using AcillatemSoundBoard.Services.SoundImplementation;
+using AcillatemSoundBoard.Services.SoundImplementation.CsCore;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

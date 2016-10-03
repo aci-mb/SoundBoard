@@ -8,6 +8,8 @@ using AcillatemSoundBoard.Helpers;
 using AcillatemSoundBoard.Model;
 using AcillatemSoundBoard.Properties;
 using AcillatemSoundBoard.Services;
+using AcillatemSoundBoard.Services.SoundImplementation;
+using AcillatemSoundBoard.Services.SoundImplementation.CsCore;
 using AcillatemSoundBoard.View;
 using GongSolutions.Wpf.DragDrop;
 using Ninject;
@@ -19,34 +21,34 @@ namespace AcillatemSoundBoard.ViewModel
         private readonly ISoundBoardRepository _soundBoardRepository;
         private readonly IDialogService _dialogService;
         private readonly IKernel _container;
-	    private readonly Func<ISound> _soundImplementationFactoryFunc;
 	    private ObservableCollection<SoundBoard> _soundBoards;
         private ISound _selectedSound;
         private SoundBoard _selectedSoundBoard;
         private ISound _selectedActiveSound;
+	    private ISoundFactory _soundFactory;
 
 	    public IObservableSoundService SoundService { get; }
 
 	    //Necessary for blend support!
         public MainWindowViewModel()
             : this(
-                CreateSoundBoardRepository(), new DialogService(),
+                CreateSoundBoardRepository(new CsCoreSoundFactory()), new DialogService(),
                 new ObservableSoundService(),
                 ContainerConfigurator.Kernel,
-				() => new CsCoreSound())
+				new CsCoreSoundFactory())
         {
         }
 
 	    public MainWindowViewModel(ISoundBoardRepository soundBoardRepository, IDialogService dialogService,
 		    IObservableSoundService soundService, IKernel container,
-			Func<ISound> soundImplementationFactoryFunc)
+			ISoundFactory soundFactory)
 	    {
 		    _soundBoardRepository = soundBoardRepository;
 		    _dialogService = dialogService;
 		    _container = container;
-		    _soundImplementationFactoryFunc = soundImplementationFactoryFunc;
+		    _soundFactory = soundFactory;
 		    SoundService = soundService;
-		    Commands = new CommandsRepository(this, soundImplementationFactoryFunc);
+		    Commands = new CommandsRepository(this, _soundFactory);
 		    SoundContextMenuCommands = new SoundContextMenuCommands(this, _dialogService, container);
 		    ActiveSoundContextMenuCommands = new ActiveSoundContextMenuCommands(this);
 		    LoadSoundBoards();
@@ -170,22 +172,22 @@ namespace AcillatemSoundBoard.ViewModel
             };
         }
 
-        private static ISoundBoardRepository CreateSoundBoardRepository()
+        private static ISoundBoardRepository CreateSoundBoardRepository(ISoundFactory soundFactory)
         {
             return IsInDesignMode
                 ? (ISoundBoardRepository) new DesignModeSoundBoardRepository()
-                : new XmlSerializingSoundBoardRepository();
+                : new XmlSerializingSoundBoardRepository(soundFactory);
         }
 
         public class CommandsRepository
         {
             private readonly MainWindowViewModel _viewModel;
-	        private readonly Func<ISound> _soundImplementationFactoryFunc;
+	        private readonly ISoundFactory _soundFactory;
 
-	        public CommandsRepository(MainWindowViewModel viewModel, Func<ISound> soundImplementationFactoryFunc)
+	        public CommandsRepository(MainWindowViewModel viewModel, ISoundFactory soundFactory)
             {
                 _viewModel = viewModel;
-		        _soundImplementationFactoryFunc = soundImplementationFactoryFunc;
+		        _soundFactory = soundFactory;
 		        CreateCommands();
             }
 
@@ -329,7 +331,7 @@ namespace AcillatemSoundBoard.ViewModel
 
                 foreach (string fileToAdd in filesToAdd)
                 {
-	                ISound sound = _soundImplementationFactoryFunc();
+	                ISound sound = _soundFactory.Create();
 	                sound.FileName = fileToAdd;
                     _viewModel.SelectedSoundBoard.Sounds.Add(sound);
                     _viewModel.SelectedSound = sound;
@@ -381,8 +383,8 @@ namespace AcillatemSoundBoard.ViewModel
                 foreach (string fileName in dataObject.GetFileDropList())
                 {
                     //if (GetFilters().ContainsValue("*" + Path.GetExtension(fileName)))
-                    {
-	                    ISound sound = _soundImplementationFactoryFunc();
+	                {
+		                ISound sound = _soundFactory.Create();
 	                    sound.FileName = fileName;
 	                    targetCollection.Add(sound);
                     }

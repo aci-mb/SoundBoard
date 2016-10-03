@@ -121,8 +121,11 @@
     <Compile Include="Helpers\TimeSpanToDoubleSecondsConverter.cs" />
     <Compile Include="Helpers\TypedValueConverterBase.cs" />
     <Compile Include="Helpers\ErrorInfo.cs" />
-    <Compile Include="Model\CsCoreSound.cs" />
     <Compile Include="Model\ISound.cs" />
+    <Compile Include="Services\SoundImplementation\CsCore\NVorbisSource.cs" />
+    <Compile Include="Services\SoundImplementation\CsCore\CsCoreSound.cs" />
+    <Compile Include="Services\SoundImplementation\CsCore\CsCoreSoundFactory.cs" />
+    <Compile Include="Services\SoundImplementation\ISoundFactory.cs" />
     <Compile Include="Model\ISoundInfo.cs" />
     <Compile Include="Model\SoundInfo.cs" />
     <Compile Include="Model\SoundState.cs" />

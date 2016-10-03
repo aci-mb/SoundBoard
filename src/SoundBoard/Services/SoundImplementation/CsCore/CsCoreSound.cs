@@ -1,14 +1,19 @@
 using System;
+using AcillatemSoundBoard.Model;
 using CSCore;
 using CSCore.Codecs;
 using CSCore.SoundOut;
 
-namespace AcillatemSoundBoard.Model
+namespace AcillatemSoundBoard.Services.SoundImplementation.CsCore
 {
 	public class CsCoreSound : SoundInfo, ISound
 	{
 		private ISoundOut _soundOut;
 
+		public CsCoreSound()
+		{
+			
+		}
 		public override int VolumeInPercent
 		{
 			get { return base.VolumeInPercent; }
@@ -30,9 +35,7 @@ namespace AcillatemSoundBoard.Model
 		public void Play()
 		{
 			IWaveSource waveSource = CodecFactory.Instance.GetCodec(FileName)
-				.ToSampleSource()
-				.ToMono()
-				.ToWaveSource();
+				.ToStereo();
 
 			_soundOut = new WasapiOut();
 			_soundOut.Initialize(waveSource);

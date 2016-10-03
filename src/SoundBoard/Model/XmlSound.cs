@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using AcillatemSoundBoard.Services.SoundImplementation;
 
 namespace AcillatemSoundBoard.Model
 {
@@ -35,9 +36,9 @@ namespace AcillatemSoundBoard.Model
         [XmlIgnore]
         public TimeSpan Delay { get; set; }
 
-        public ISound ToSound(Func<ISound> soundImplementationFactoryFunc)
+        public ISound ToSound(ISoundFactory soundFactory)
         {
-	        ISound sound = soundImplementationFactoryFunc();
+	        ISound sound = soundFactory.Create();
 	        sound.Delay = Delay;
 	        sound.FileName = FileName;
 	        sound.Name = Name;

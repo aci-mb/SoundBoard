@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using AcillatemSoundBoard.Model;
+using AcillatemSoundBoard.Services.SoundImplementation;
 
 namespace AcillatemSoundBoard.Services
 {
     public class XmlSerializingSoundBoardRepository : ISoundBoardRepository
     {
-        private const string XmlFile = "ActillatemSoundBoardData.xml";
+	    private readonly ISoundFactory _soundFactory;
+	    private const string XmlFile = "ActillatemSoundBoardData.xml";
 
-        public IEnumerable<SoundBoard> GetSoundBoards()
+	    public XmlSerializingSoundBoardRepository(ISoundFactory soundFactory)
+	    {
+		    _soundFactory = soundFactory;
+	    }
+
+	    public IEnumerable<SoundBoard> GetSoundBoards()
         {
             try
             {
@@ -22,7 +28,7 @@ namespace AcillatemSoundBoard.Services
                     return
                         from xmlBoard
                             in (serializer.Deserialize(reader) as AcillatemSoundBoardData).SoundBoards
-                        select xmlBoard.ToSoundBoard();
+                        select xmlBoard.ToSoundBoard(_soundFactory);
                 }
             }
             catch (Exception)

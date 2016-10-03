@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using AcillatemSoundBoard.Services.SoundImplementation;
 
 namespace AcillatemSoundBoard.Model
 {
@@ -21,14 +22,14 @@ namespace AcillatemSoundBoard.Model
 
         public string Name { get; set; }
 
-        public SoundBoard ToSoundBoard()
+        public SoundBoard ToSoundBoard(ISoundFactory soundFactory)
         {
             return new SoundBoard
             {
                 Name = Name,
                 Sounds = new ObservableCollection<ISound>(
                     from sound in Sounds
-                    select sound.ToSound(() => new CsCoreSound()))
+                    select sound.ToSound(soundFactory))
             };
         }
     }
