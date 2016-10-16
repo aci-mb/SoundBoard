@@ -10,10 +10,6 @@ namespace AcillatemSoundBoard.Services.SoundImplementation.CsCore
 	{
 		private ISoundOut _soundOut;
 
-		public CsCoreSound()
-		{
-			
-		}
 		public override int VolumeInPercent
 		{
 			get { return base.VolumeInPercent; }

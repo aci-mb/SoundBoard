@@ -8,7 +8,7 @@ using AcillatemSoundBoard.Properties;
 
 namespace AcillatemSoundBoard.Model
 {
-	public sealed class SoundInfo : ISoundInfo
+	public class SoundInfo : ISoundInfo
 	{
 		private string _fileName;
 		private ErrorInfo _errorInfo;
@@ -20,10 +20,9 @@ namespace AcillatemSoundBoard.Model
 		public SoundInfo()
 		{
 			_volumeInPercent = 100;
-			ErrorInfo = new ErrorInfo();
 		}
 
-		public string FileName
+		public virtual string FileName
 		{
 			get { return _fileName; }
 			set
@@ -47,9 +46,9 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public ErrorInfo ErrorInfo
+		public virtual ErrorInfo ErrorInfo
 		{
-			get { return _errorInfo; }
+			get { return _errorInfo ?? (_errorInfo = new ErrorInfo()); }
 			set
 			{
 				if (Equals(value, _errorInfo)) return;
@@ -58,7 +57,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public string Name
+		public virtual string Name
 		{
 			get { return _name; }
 			set
@@ -69,7 +68,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public int VolumeInPercent
+		public virtual int VolumeInPercent
 		{
 			get { return _volumeInPercent; }
 			set
@@ -80,7 +79,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public bool IsLooped
+		public virtual bool IsLooped
 		{
 			get { return _isLooped; }
 			set
@@ -91,7 +90,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public TimeSpan Delay
+		public virtual TimeSpan Delay
 		{
 			get { return _delay; }
 			set
@@ -105,7 +104,7 @@ namespace AcillatemSoundBoard.Model
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotifyPropertyChangedInvocator]
-		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}

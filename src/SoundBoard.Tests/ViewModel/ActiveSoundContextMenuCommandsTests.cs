@@ -97,7 +97,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         }
         
         [TestMethod]
-        public void RemoveSoundsCommandExecute_SoundBoardIsNotNullAndParameterIsIListWith3Sounds_RemovesThoseSoundsFromSelectedSoundboard()
+        public void RemoveSoundsCommandExecute_SoundBoardIsNotNullAndParameterIsIListWith3Sounds_RemovesOnlyThoseSoundsFromSelectedSoundboard()
         {
 			//Arrange
 	        ObservableCollection<ISound> selectedSounds = new ObservableCollection<ISound>
@@ -106,11 +106,13 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 		        MockRepository.GenerateStub<ISound>(),
 		        MockRepository.GenerateStub<ISound>(),
 	        };
-	        ObservableCollection<ISound> activeSounds = new ObservableCollection<ISound>(selectedSounds);
-			activeSounds.Add(MockRepository.GenerateStub<ISound>());
-			activeSounds.Add(MockRepository.GenerateStub<ISound>());
+	        ObservableCollection<ISound> activeSounds = new ObservableCollection<ISound>(selectedSounds)
+	        {
+		        MockRepository.GenerateStub<ISound>(),
+		        MockRepository.GenerateStub<ISound>()
+	        };
 
-			IMainWindowViewModel mainWindowViewModel = CommonStubsFactory.StubMainWindowViewModel(initialSounds: activeSounds);
+	        IMainWindowViewModel mainWindowViewModel = CommonStubsFactory.StubMainWindowViewModel(initialSounds: activeSounds);
 
 			Target = CreateTarget(mainWindowViewModel);
 
