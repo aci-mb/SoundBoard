@@ -81,6 +81,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CommonStubsFactory.cs" />
     <Compile Include="Helpers\TypedValueConverterBaseTests.cs" />
     <Compile Include="Helpers\BooleanToToggleTextConverterTests.cs" />
     <Compile Include="Model\CsCoreSoundTests.cs" />

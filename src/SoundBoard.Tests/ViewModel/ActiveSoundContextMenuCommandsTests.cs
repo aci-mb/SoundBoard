@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
 using AcillatemSoundBoard.Model;
+using AcillatemSoundBoard.Services;
 using AcillatemSoundBoard.ViewModel;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,13 +20,13 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestInitialize]
         public void InitializeBeforeEachTest()
         {
-            Target = new ActiveSoundContextMenuCommands(MockRepository.GenerateStub<IMainWindowViewModel>());
+	        Target = CreateTarget(MockRepository.GenerateStub<IMainWindowViewModel>());
         }
 
         [TestMethod]
         public void Constructor_MainWindowViewModelIsNull_ThrowsArgumentNullException()
         {
-            var constructor = new Action(() => new ActiveSoundContextMenuCommands(null));
+            Action constructor = () => new ActiveSoundContextMenuCommands(null);
 
             constructor.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("mainWindowViewModel");
         }
@@ -34,7 +34,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void Commands__ContainsItemForRemoveSoundsCommand()
         {
-            var menuCommand = Target.Commands.First(command => ReferenceEquals(command.Command, Target.RemoveSoundsCommand));
+			Target.Commands.First().Command.ShouldBeEquivalentTo(Target.RemoveSoundsCommand);
         }
 
         [TestMethod]
@@ -61,25 +61,20 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundsCommandCanExecute_ParameterIsIListWith3Sounds_ReturnsTrue()
         {
-            var stub = MockRepository.GenerateStub<IMainWindowViewModel>();
-
-            Target = new ActiveSoundContextMenuCommands(stub);
+	        Target = CreateTarget();
 
 	        Target.RemoveSoundsCommand.CanExecute(new Collection<ISound>
 	        {
 		        MockRepository.GenerateStub<ISound>(),
 		        MockRepository.GenerateStub<ISound>(),
 		        MockRepository.GenerateStub<ISound>()
-	        })
-		        .Should().BeTrue();
+	        }).Should().BeTrue();
         }
 
         [TestMethod]
         public void RemoveSoundsCommandCanExecute_ParameterIsIListWith1Sound_ReturnsTrue()
         {
-            var stub = MockRepository.GenerateStub<IMainWindowViewModel>();
-
-            Target = new ActiveSoundContextMenuCommands(stub);
+	        Target = CreateTarget();
 
 	        Target.RemoveSoundsCommand.CanExecute(new Collection<ISound> {MockRepository.GenerateStub<ISound>()})
 		        .Should().BeTrue();
@@ -88,7 +83,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundsCommandExecute_ParameterIsNull_ThrowsArgumentNullException()
         {
-            var removeSoundsCommandExecute = new Action(() => Target.RemoveSoundsCommand.Execute(null));
+            Action removeSoundsCommandExecute = () => Target.RemoveSoundsCommand.Execute(null);
 
             removeSoundsCommandExecute.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("parameter");
         }
@@ -96,7 +91,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundsCommandExecute_ParameterIsNotOfTypeIList_ThrowsArgumentException()
         {
-            var removeSoundsCommandExecute = new Action(() => Target.RemoveSoundsCommand.Execute("Not an IList"));
+            Action removeSoundsCommandExecute = () => Target.RemoveSoundsCommand.Execute("Not an IList");
 
             removeSoundsCommandExecute.ShouldThrow<ArgumentException>()
                 .WithMessage("Parameter must be of type " + typeof(IList) + "*")
@@ -106,30 +101,35 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundsCommandExecute_SoundBoardIsNotNullAndParameterIsIListWith3Sounds_RemovesThoseSoundsFromSelectedSoundboard()
         {
-            //Arrange
-            var selectedSounds = new List<ISound>
-            {
-				MockRepository.GenerateStub<ISound>(),
-				MockRepository.GenerateStub<ISound>(),
-				MockRepository.GenerateStub<ISound>(),
-            };
-            
-            var stub = MockRepository.GenerateStub<IMainWindowViewModel>();
-            stub.ActiveSounds = new ObservableCollection<ISound>(selectedSounds)
-            {
-				MockRepository.GenerateStub<ISound>(),
-				MockRepository.GenerateStub<ISound>()
-			};
+			//Arrange
+	        ObservableCollection<ISound> selectedSounds = new ObservableCollection<ISound>
+	        {
+		        MockRepository.GenerateStub<ISound>(),
+		        MockRepository.GenerateStub<ISound>(),
+		        MockRepository.GenerateStub<ISound>(),
+	        };
+	        ObservableCollection<ISound> activeSounds = new ObservableCollection<ISound>(selectedSounds);
+			activeSounds.Add(MockRepository.GenerateStub<ISound>());
+			activeSounds.Add(MockRepository.GenerateStub<ISound>());
 
-            Target = new ActiveSoundContextMenuCommands(stub);
+			IMainWindowViewModel mainWindowViewModel = CommonStubsFactory.StubMainWindowViewModel(initialSounds: activeSounds);
+
+			Target = CreateTarget(mainWindowViewModel);
 
             //Act
             Target.RemoveSoundsCommand.Execute(selectedSounds);
 
             //Assert
-            stub.ActiveSounds
+            mainWindowViewModel.SoundService.ActiveSounds
                 .Should().NotContain(selectedSounds)
                 .And.HaveCount(2);
         }
+
+	    private static ActiveSoundContextMenuCommands CreateTarget(IMainWindowViewModel mainWindowViewModel = null)
+	    {
+		    IMainWindowViewModel theMainWindowViewModel = mainWindowViewModel ?? CommonStubsFactory.StubMainWindowViewModel();
+
+		    return new ActiveSoundContextMenuCommands(theMainWindowViewModel);
+	    }
     }
 }

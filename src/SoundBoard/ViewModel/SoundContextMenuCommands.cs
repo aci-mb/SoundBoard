@@ -159,7 +159,7 @@ namespace AcillatemSoundBoard.ViewModel
 
         private void ActivateSounds(object parameter)
         {
-            var selectedSounds = ConvertParameterToSelectedSoundsOrThrow(parameter);
+            IList selectedSounds = ConvertParameterToSelectedSoundsOrThrow(parameter);
 
             foreach (var soundObject in selectedSounds)
             {

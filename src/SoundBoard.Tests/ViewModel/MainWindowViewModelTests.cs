@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using AcillatemSoundBoard.Model;
 using AcillatemSoundBoard.Services;
+using AcillatemSoundBoard.Services.SoundImplementation;
 using AcillatemSoundBoard.View;
 using AcillatemSoundBoard.ViewModel;
 using FluentAssertions;
@@ -22,7 +23,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void AddSoundCommandCanExecute_SelectedSoundBoardIsNull_ReturnsFalse()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             Target.Commands.AddSoundCommand.CanExecute(null).Should().BeFalse();
         }
@@ -30,7 +31,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void AddSoundCommandCanExecute_SelectedSoundBoardIsNotNull_ReturnsTrue()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
             
             Target.SelectedSoundBoard = new SoundBoard();
 
@@ -42,14 +43,14 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         {
             //Arrange
             IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-            var returnedFiles = new string[]
-            {
-                @"C:\Creeping Death.mp3",
-                @"C:\Out of Control.wma",
-                @"C:\Bell.ogg"
-            };
+	        string[] returnedFiles =
+	        {
+		        @"C:\Creeping Death.mp3",
+		        @"C:\Out of Control.wma",
+		        @"C:\Bell.ogg"
+	        };
 
-            Target = CreateTargetWithStubs(dialogService: stub);
+            Target = CreateTarget(dialogService: stub);
             Target.SelectedSoundBoard = new SoundBoard();
 
             stub.Stub(service => service.OpenFileDialog(null, null)).IgnoreArguments().Return(returnedFiles);
@@ -72,7 +73,9 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             IEnumerable<string> returnedFiles = new[] {@"C:\SomeNewFile.mp3"};
 
             stub.Stub(service => service.OpenFileDialog(null, null)).IgnoreArguments().Return(returnedFiles);
-            Target = CreateTargetWithStubs(dialogService: stub);
+
+	        Target = CreateTarget(dialogService: stub);
+
             Target.SelectedSoundBoard = new SoundBoard();
 
             //Act
@@ -88,7 +91,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundCommandCanExecute_SelectedSoundIsNull_ReturnsFalse()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             Target.Commands.RemoveSoundCommand.CanExecute(null).Should().BeFalse();
         }
@@ -96,7 +99,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundCommandCanExecute_SelectedSoundIsNotNull_ReturnsTrue()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
 	        Target.SelectedSound = MockRepository.GenerateStub<ISound>();
 
@@ -110,7 +113,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             //Arrange
             ISound soundToRemove = MockRepository.GenerateStub<ISound>();
 
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
             Target.SelectedSoundBoard = new SoundBoard
             {
                 Sounds = new ObservableCollection<ISound> {soundToRemove}
@@ -129,7 +132,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void AddSoundBoardCommandCanExecute__ReturnsTrue()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             Target.Commands.AddSoundBoardCommand.CanExecute(null).Should().BeTrue();
         }
@@ -143,7 +146,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             IKernel container = new StandardKernel();
             container.Bind<MainWindow>().ToConstant(expectedParent);
 
-            Target = CreateTargetWithStubs(dialogService: mock, container: container);
+            Target = CreateTarget(dialogService: mock, container: container);
 
             mock.Expect(service => service.NameDialog(
                 Arg<Window>.Is.Same(expectedParent),
@@ -165,7 +168,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             IDialogService stub = MockRepository.GenerateStub<IDialogService>();
             const string returnedSoundBoardName = "My new soundboard";
 
-            Target = CreateTargetWithStubs(dialogService: stub);
+            Target = CreateTarget(dialogService: stub);
 
             stub.Stub(service => service.NameDialog(null, null, null, null)).IgnoreArguments().Return(returnedSoundBoardName);
 
@@ -182,7 +185,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             //Arrange
             IDialogService stub = MockRepository.GenerateStub<IDialogService>();
 
-            Target = CreateTargetWithStubs(dialogService: stub);
+            Target = CreateTarget(dialogService: stub);
 
             stub.Stub(service => service.NameDialog(null, null, null, null)).IgnoreArguments().Return(null);
 
@@ -202,7 +205,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             IDialogService stub = MockRepository.GenerateStub<IDialogService>();
             stub.Stub(service => stub.NameDialog(null, null, null, null)).IgnoreArguments().Return(nameOfNewSoundBoard);
 
-            Target = CreateTargetWithStubs(dialogService: stub);
+            Target = CreateTarget(dialogService: stub);
 
             //Act
             Target.Commands.AddSoundBoardCommand.Execute(null);
@@ -214,7 +217,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundBoardCommandCanExecute_SelectedSoundBoardIsNull_ReturnsFalse()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             Target.Commands.RemoveSoundBoardCommand.CanExecute(null).Should().BeFalse();
         }
@@ -222,7 +225,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void RemoveSoundBoardCommandCanExecute_SelectedSoundBoardIsNotNull_ReturnsTrue()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             Target.SelectedSoundBoard = new SoundBoard();
 
@@ -235,7 +238,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             //Arrange
             SoundBoard soundBoardToRemove = new SoundBoard();
 
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
             Target.SoundBoards.Add(soundBoardToRemove);
 
             Target.SelectedSoundBoard = soundBoardToRemove;
@@ -251,7 +254,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void ActivateSingleSoundCommand_ParameterIsNull_ThrowsArgumentNullException()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             var execute = new Action(() => Target.Commands.ActivateSingleSoundCommand.Execute(null));
 
@@ -261,7 +264,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void ActivateSingleSoundCommand_ParameterIsNotOfTypeSound_ThrowsArgumentException()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             var execute = new Action(() => Target.Commands.ActivateSingleSoundCommand.Execute("Not a sound"));
 
@@ -274,26 +277,29 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         public void ActivateSingleSoundCommand_ParameterIsNotNull_AddsCloneOfSoundToActiveSounds()
         {
             //Arrange
-            Target = CreateTargetWithStubs();
-            ISound sound = StubSoundWithRandomName();
+	        ObservableCollection<ISound> activeSounds = new ObservableCollection<ISound>();
+	        IObservableSoundService observableSoundService = CommonStubsFactory.StubObservableSoundService(activeSounds);
+
+	        Target = CreateTarget(soundService: observableSoundService);
+            ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
 
             //Act
             Target.Commands.ActivateSingleSoundCommand.Execute(sound);
 
-            //Assert
-            Target.ActiveSounds.Should().NotContain(s => ReferenceEquals(s, sound));
-            Target.ActiveSounds.First().ShouldBeEquivalentTo(sound);
+			//Assert
+			activeSounds.Should().NotContain(s => ReferenceEquals(s, sound));
+			activeSounds.Single().ShouldBeEquivalentTo(sound);
         }
 
         [TestMethod]
         public void ActivateSingleSoundCommand_SelectedSoundIsNotNull_AddedSoundIsSelected()
         {
             //Arrange
-            Target = CreateTargetWithStubs();
-            ISound sound = StubSoundWithRandomName();
+            Target = CreateTarget();
+			ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
 
-            //Act
-            Target.Commands.ActivateSingleSoundCommand.Execute(sound);
+			//Act
+			Target.Commands.ActivateSingleSoundCommand.Execute(sound);
 
             //Assert
             Target.SelectedActiveSound.ShouldBeEquivalentTo(sound);
@@ -303,7 +309,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void DeactivateSingleSoundCommand_ParameterIsNull_ThrowsArgumentNullException()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             var execute = new Action(() => Target.Commands.DeactivateSingleSoundCommand.Execute(null));
 
@@ -313,7 +319,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void DeactivateSingleSoundCommand_ParameterIsNotOfTypeSound_ThrowsArgumentException()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             var execute = new Action(() => Target.Commands.DeactivateSingleSoundCommand.Execute("Not a sound"));
 
@@ -326,22 +332,22 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         public void DeactivateSoundCommandExecute_SelectedActiveSoundIsNotNull_RemovesSoundFromActiveSounds()
         {
             //Arrange
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
             ISound sound = MockRepository.GenerateStub<ISound>();
-            Target.ActiveSounds.Add(sound);
+            Target.SoundService.Add(sound);
 
             //Act
             Target.Commands.DeactivateSingleSoundCommand.Execute(sound);
 
             //Assert
-            Target.ActiveSounds.Should().NotContain(sound);
+            Target.SoundService.ActiveSounds.Should().NotContain(sound);
         }
 
 
         [TestMethod]
         public void ToggleSoundIsLoopedCommandExecute_ParameterIsNull_ThrowsArgumentNullException()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             var actionName = new Action(() => Target.Commands.ToggleSoundIsLoopedCommand.Execute(null));
 
@@ -351,7 +357,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void ToggleSoundIsLoopedCommandExecute_ParameterIsNotOfTypeSound_ThrowsArgumentException()
         {
-            Target = CreateTargetWithStubs();
+            Target = CreateTarget();
 
             var execute = new Action(() => Target.Commands.ToggleSoundIsLoopedCommand.Execute(string.Empty));
 
@@ -363,9 +369,9 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void ToggleSoundIsLoopedCommandExecute_IsLoopedWasTrue_IsLoopedIsNowFalse()
         {
-	        ISound sound = StubSoundWithRandomName();
-	        sound.IsLooped = true;
-            Target = CreateTargetWithStubs();
+			ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
+			sound.IsLooped = true;
+            Target = CreateTarget();
             
             Target.Commands.ToggleSoundIsLoopedCommand.Execute(sound);
 
@@ -375,9 +381,9 @@ namespace AcillatemSoundBoard.Tests.ViewModel
         [TestMethod]
         public void ToggleSoundIsLoopedCommandExecute_IsLoopedWasFalse_IsLoopedIsNowTrue()
         {
-			ISound sound = StubSoundWithRandomName();
-			sound.IsLooped = true;
-			Target = CreateTargetWithStubs();
+			ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
+			sound.IsLooped = false;
+			Target = CreateTarget();
 
             Target.Commands.ToggleSoundIsLoopedCommand.Execute(sound);
 
@@ -395,7 +401,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             mock.Expect(repository => repository.SetSoundBoards(null)).IgnoreArguments()
                 .Repeat.Never(); 
             
-            Target = CreateTargetWithStubs(dialogService: stub, soundBoardRepository: mock);
+            Target = CreateTarget(dialogService: stub, soundBoardRepository: mock);
 
             //Act
             Target.Commands.ShutdownAppCommand.Execute(null);
@@ -416,7 +422,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             mock.Expect(repository => repository.SetSoundBoards(null)).IgnoreArguments()
                 .Repeat.Once();
 
-            Target = CreateTargetWithStubs(dialogService: stub, soundBoardRepository: mock);
+            Target = CreateTarget(dialogService: stub, soundBoardRepository: mock);
 
             //Act
             Target.Commands.ShutdownAppCommand.Execute(null);
@@ -437,7 +443,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
                 .IgnoreArguments()
                 .Return(false);
 
-            Target = CreateTargetWithStubs(dialogService: mock, soundBoardRepository: stub);
+            Target = CreateTarget(dialogService: mock, soundBoardRepository: stub);
 
             //Act
             Target.Commands.ShutdownAppCommand.Execute(null);
@@ -459,7 +465,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
                 .Return(false)
                 .Repeat.Never();
 
-            Target = CreateTargetWithStubs(dialogService: mock, soundBoardRepository: stub);
+            Target = CreateTarget(dialogService: mock, soundBoardRepository: stub);
 
             //Act
             Target.Commands.ShutdownAppCommand.Execute(null);
@@ -468,32 +474,21 @@ namespace AcillatemSoundBoard.Tests.ViewModel
             mock.VerifyAllExpectations();
         }
 
-        private static MainWindowViewModel CreateTargetWithStubs(ISoundBoardRepository soundBoardRepository = null, IDialogService dialogService = null, IKernel container = null)
-        {
-            if (container == null)
-            {
-                container = new StandardKernel();
-                container.Bind<MainWindow>().ToMethod(context => new MainWindow());
-            }
-
-            return new MainWindowViewModel(
-                soundBoardRepository ?? MockRepository.GenerateStub<ISoundBoardRepository>(),
-                dialogService ?? MockRepository.GenerateStub<IDialogService>(),
-                sounds => null,
-                container,
-				() => MockRepository.GenerateStub<ISound>());
-        }
-
-	    private ISound StubSoundWithRandomName()
+	    private static MainWindowViewModel CreateTarget(ISoundBoardRepository soundBoardRepository = null,
+		    IDialogService dialogService = null, IKernel container = null, IObservableSoundService soundService = null)
 	    {
-		    return StubSoundWithName(Guid.NewGuid().ToString());
-	    }
+		    if (container == null)
+		    {
+			    container = new StandardKernel();
+			    container.Bind<MainWindow>().ToMethod(context => new MainWindow());
+		    }
 
-		private ISound StubSoundWithName(string name)
-		{
-			ISound sound = MockRepository.GenerateStub<ISound>();
-			sound.Name = name;
-			return sound;
-		}
+		    return new MainWindowViewModel(
+			    soundBoardRepository ?? MockRepository.GenerateStub<ISoundBoardRepository>(),
+			    dialogService ?? MockRepository.GenerateStub<IDialogService>(),
+			    soundService ?? CommonStubsFactory.StubObservableSoundService(),
+			    container,
+			    CommonStubsFactory.StubSoundFactory());
+	    }
 	}
 }
