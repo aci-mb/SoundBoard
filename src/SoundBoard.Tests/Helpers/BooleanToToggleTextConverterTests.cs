@@ -1,9 +1,9 @@
 ﻿using System.Windows;
-using AcillatemSoundBoard.Helpers;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SoundBoard.Helpers;
 
-namespace AcillatemSoundBoard.Tests.Helpers
+namespace SoundBoard.Tests.Helpers
 {
     [TestClass]
     public class BooleanToToggleTextConverterTests

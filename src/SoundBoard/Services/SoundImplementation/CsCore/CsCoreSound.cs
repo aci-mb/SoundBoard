@@ -1,10 +1,10 @@
 using System;
-using AcillatemSoundBoard.Model;
 using CSCore;
 using CSCore.Codecs;
 using CSCore.SoundOut;
+using SoundBoard.Model;
 
-namespace AcillatemSoundBoard.Services.SoundImplementation.CsCore
+namespace SoundBoard.Services.SoundImplementation.CsCore
 {
 	public class CsCoreSound : SoundInfo, ISound
 	{

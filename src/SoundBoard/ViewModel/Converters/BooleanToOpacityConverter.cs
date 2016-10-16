@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace AcillatemSoundBoard.ViewModel.Converters
+namespace SoundBoard.ViewModel.Converters
 {
     public class BooleanToOpacityConverter : IValueConverter
     {

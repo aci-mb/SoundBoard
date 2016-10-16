@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
-using AcillatemSoundBoard.Model;
+using SoundBoard.Model;
 
-namespace AcillatemSoundBoard.Services
+namespace SoundBoard.Services
 {
 	public interface IObservableSoundService
 	{

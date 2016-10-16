@@ -4,32 +4,32 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using AcillatemSoundBoard.Helpers;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Properties;
-using AcillatemSoundBoard.Services;
-using AcillatemSoundBoard.Services.SoundImplementation;
-using AcillatemSoundBoard.Services.SoundImplementation.CsCore;
-using AcillatemSoundBoard.View;
+using SoundBoard.Properties;
 using GongSolutions.Wpf.DragDrop;
 using Ninject;
+using SoundBoard.Helpers;
+using SoundBoard.Model;
+using SoundBoard.Services;
+using SoundBoard.Services.SoundImplementation;
+using SoundBoard.Services.SoundImplementation.CsCore;
+using SoundBoard.View;
 
-namespace AcillatemSoundBoard.ViewModel
+namespace SoundBoard.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel, IDropTarget
     {
         private readonly ISoundBoardRepository _soundBoardRepository;
         private readonly IDialogService _dialogService;
         private readonly IKernel _container;
-	    private ObservableCollection<SoundBoard> _soundBoards;
+	    private ObservableCollection<Model.SoundBoard> _soundBoards;
         private ISound _selectedSound;
-        private SoundBoard _selectedSoundBoard;
+        private Model.SoundBoard _selectedSoundBoard;
         private ISound _selectedActiveSound;
 	    private readonly ISoundFactory _soundFactory;
 
 	    public IObservableSoundService SoundService { get; }
 
-	    //Necessary for blend support!
+	    //Don't remove this constructor, it's necessary for blend support!
         public MainWindowViewModel()
             : this(
                 CreateSoundBoardRepository(new CsCoreSoundFactory()), new DialogService(),
@@ -58,7 +58,7 @@ namespace AcillatemSoundBoard.ViewModel
 
         public SoundContextMenuCommands SoundContextMenuCommands { get; private set; }
 
-        public ObservableCollection<SoundBoard> SoundBoards
+        public ObservableCollection<Model.SoundBoard> SoundBoards
         {
             get { return _soundBoards; }
             set
@@ -80,7 +80,7 @@ namespace AcillatemSoundBoard.ViewModel
             }
         }
 
-        public SoundBoard SelectedSoundBoard
+        public Model.SoundBoard SelectedSoundBoard
         {
             get { return _selectedSoundBoard; }
             set
@@ -106,9 +106,9 @@ namespace AcillatemSoundBoard.ViewModel
 
         private void LoadSoundBoards()
         {
-            SoundBoards = new ObservableCollection<SoundBoard>(
+            SoundBoards = new ObservableCollection<Model.SoundBoard>(
                 _soundBoardRepository.GetSoundBoards() ??
-                Enumerable.Empty<SoundBoard>());
+                Enumerable.Empty<Model.SoundBoard>());
 
             SelectedSoundBoard = SoundBoards.FirstOrDefault();
         }
@@ -275,7 +275,7 @@ namespace AcillatemSoundBoard.ViewModel
                 {
                     throw new ArgumentException(
                         string.Format("Parameter must be of type {0}", typeof (ISound)),
-                        "parameter");
+                        nameof(parameter));
                 }
 
                 ISound clonedSound = sound.Clone() as ISound;
@@ -287,15 +287,15 @@ namespace AcillatemSoundBoard.ViewModel
             {
                 if (parameter == null)
                 {
-                    throw new ArgumentNullException("parameter");
+                    throw new ArgumentNullException(nameof(parameter));
                 }
 
                 if (!(parameter is ISound))
                 {
-                    throw new ArgumentException(string.Format("Parameter must be of type {0}", typeof (ISound)), "parameter");
+                    throw new ArgumentException(string.Format("Parameter must be of type {0}", typeof (ISound)), nameof(parameter));
                 }
 
-                ISound sound = parameter as ISound;
+                ISound sound = (ISound) parameter;
 
                 sound.IsLooped = !sound.IsLooped;
             }
@@ -310,7 +310,7 @@ namespace AcillatemSoundBoard.ViewModel
 
                 if (!string.IsNullOrEmpty(name))
                 {
-                    var addedSoundBoard = new SoundBoard { Name = name };
+                    var addedSoundBoard = new Model.SoundBoard { Name = name };
                     _viewModel.SoundBoards.Add(addedSoundBoard);
                     _viewModel.SelectedSoundBoard = addedSoundBoard; 
                 }
@@ -347,21 +347,25 @@ namespace AcillatemSoundBoard.ViewModel
             
             dropInfo.NotHandled = true;
 
-            if (dropInfo.Data is ISound)
+	        ISound sound = dropInfo.Data as ISound;
+	        IEnumerable<ISound> sounds = dropInfo.Data as IEnumerable<ISound>;
+			DataObject dataObject = dropInfo.Data as DataObject;
+
+			if (sound != null)
             {
-                DropSounds(targetCollection, dropInfo.Data as ISound);
+                DropSounds(targetCollection, sound);
             }
-            else if (dropInfo.Data is IEnumerable<ISound>)
-            {
-                DropSounds(targetCollection, (dropInfo.Data as IEnumerable<ISound>).ToArray());
-            }
-            else if (dropInfo.Data is DataObject)
-            {
-                DropFiles(targetCollection, dropInfo.Data as DataObject);
-            }
+            else if (sounds != null)
+		    {
+			    DropSounds(targetCollection, sounds.ToArray());
+		    }
+		    else if (dataObject != null)
+	        {
+		        DropFiles(targetCollection, dataObject);
+	        }
         }
 
-        private void DropSounds(ObservableCollection<ISound> targetCollection, params ISound[] sounds)
+        private void DropSounds(ICollection<ISound> targetCollection, params ISound[] sounds)
         {
             foreach (ISound sound in sounds)
             {
@@ -369,7 +373,7 @@ namespace AcillatemSoundBoard.ViewModel
             }
         }
 
-        private void DropFiles(ObservableCollection<ISound> targetCollection, DataObject dataObject)
+        private void DropFiles(ICollection<ISound> targetCollection, DataObject dataObject)
         {
             if (dataObject != null && dataObject.ContainsFileDropList())
             {

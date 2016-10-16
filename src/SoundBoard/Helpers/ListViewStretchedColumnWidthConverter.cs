@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace AcillatemSoundBoard.Helpers
+namespace SoundBoard.Helpers
 {
     public class ListViewStretchedColumnWidthConverter : IMultiValueConverter
     {

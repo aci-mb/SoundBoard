@@ -1,8 +1,8 @@
-using AcillatemSoundBoard.Model;
 using CSCore;
 using CSCore.Codecs;
+using SoundBoard.Model;
 
-namespace AcillatemSoundBoard.Services.SoundImplementation.CsCore
+namespace SoundBoard.Services.SoundImplementation.CsCore
 {
 	public class CsCoreSoundFactory : ISoundFactory
 	{

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AcillatemSoundBoard.View
+namespace SoundBoard.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

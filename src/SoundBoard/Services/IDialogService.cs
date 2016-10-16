@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace AcillatemSoundBoard.Services
+namespace SoundBoard.Services
 {
     public interface IDialogService
     {

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace AcillatemSoundBoard.Helpers
+namespace SoundBoard.Helpers
 {
     public static class DialogCloser
     {

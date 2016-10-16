@@ -1,8 +1,8 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:xc="clr-namespace:AcillatemSoundBoard.Helpers"
+	xmlns:xc="clr-namespace:SoundBoard.Helpers"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	x:Class="AcillatemSoundBoard.View.NameDialog"
+	x:Class="SoundBoard.View.NameDialog"
 	x:Name="Window"
 	Title="{Binding Title}" 
 	

@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using AcillatemSoundBoard.Model;
 
-namespace AcillatemSoundBoard.Services
+namespace SoundBoard.Services
 {
     public interface ISoundBoardRepository
     {
-        IEnumerable<SoundBoard> GetSoundBoards();
-        void SetSoundBoards(IEnumerable<SoundBoard> soundBoards);
-        bool AreSoundBoardsDifferent(IEnumerable<SoundBoard> soundBoards);
+        IEnumerable<Model.SoundBoard> GetSoundBoards();
+        void SetSoundBoards(IEnumerable<Model.SoundBoard> soundBoards);
+        bool AreSoundBoardsDifferent(IEnumerable<Model.SoundBoard> soundBoards);
     }
 }

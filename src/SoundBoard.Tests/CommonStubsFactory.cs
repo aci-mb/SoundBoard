@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Services;
-using AcillatemSoundBoard.Services.SoundImplementation;
-using AcillatemSoundBoard.ViewModel;
 using Rhino.Mocks;
+using SoundBoard.Model;
+using SoundBoard.Services;
+using SoundBoard.Services.SoundImplementation;
+using SoundBoard.ViewModel;
 
-namespace AcillatemSoundBoard.Tests
+namespace SoundBoard.Tests
 {
 	internal static class CommonStubsFactory
 	{

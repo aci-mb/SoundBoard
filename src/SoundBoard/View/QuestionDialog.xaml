@@ -1,11 +1,11 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:xc="clr-namespace:AcillatemSoundBoard.Helpers"
+	xmlns:xc="clr-namespace:SoundBoard.Helpers"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:ViewModel="clr-namespace:AcillatemSoundBoard.ViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-	xmlns:resx="clr-namespace:AcillatemSoundBoard.Properties"
+	xmlns:ViewModel="clr-namespace:SoundBoard.ViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	xmlns:resx="clr-namespace:SoundBoard.Properties"
 
-    x:Class="AcillatemSoundBoard.View.QuestionDialog"
+    x:Class="SoundBoard.View.QuestionDialog"
 	x:Name="Window"
 	Title="{Binding Title}"
 	xc:DialogCloser.DialogResult="{Binding DialogResult}"

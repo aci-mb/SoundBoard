@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using AcillatemSoundBoard.Annotations;
+using SoundBoard.Model;
+using SoundBoard.Annotations;
 
-namespace AcillatemSoundBoard.Model
+namespace SoundBoard.Model
 {
     public class SoundBoard : INotifyPropertyChanged
     {

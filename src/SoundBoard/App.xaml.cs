@@ -1,9 +1,9 @@
 ﻿using System.Windows;
-using AcillatemSoundBoard.View;
-using AcillatemSoundBoard.ViewModel;
 using Ninject;
+using SoundBoard.View;
+using SoundBoard.ViewModel;
 
-namespace AcillatemSoundBoard
+namespace SoundBoard
 {
     /// <summary>
     /// Interaction logic for App.xaml

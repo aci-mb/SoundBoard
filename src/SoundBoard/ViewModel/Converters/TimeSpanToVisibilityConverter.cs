@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
-using AcillatemSoundBoard.Helpers;
+using SoundBoard.Helpers;
 
-namespace AcillatemSoundBoard.ViewModel.Converters
+namespace SoundBoard.ViewModel.Converters
 {
     public class TimeSpanToVisibilityConverter : TypedValueConverterBase<TimeSpan, Visibility>
     {

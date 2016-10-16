@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using AcillatemSoundBoard.Services.SoundImplementation;
+using SoundBoard.Services.SoundImplementation;
 
-namespace AcillatemSoundBoard.Model
+namespace SoundBoard.Model
 {
     public class XmlSoundBoard
     {

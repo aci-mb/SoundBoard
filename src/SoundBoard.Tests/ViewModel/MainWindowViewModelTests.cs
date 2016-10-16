@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Services;
-using AcillatemSoundBoard.View;
-using AcillatemSoundBoard.ViewModel;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 using Rhino.Mocks;
+using SoundBoard.Model;
+using SoundBoard.Services;
+using SoundBoard.View;
+using SoundBoard.ViewModel;
 
-namespace AcillatemSoundBoard.Tests.ViewModel
+namespace SoundBoard.Tests.ViewModel
 {
 	[TestClass]
 	public class MainWindowViewModelTests
@@ -32,7 +32,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 		{
 			Target = CreateTarget();
 
-			Target.SelectedSoundBoard = new SoundBoard();
+			Target.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
 
 			Target.Commands.AddSoundCommand.CanExecute(null).Should().BeTrue();
 		}
@@ -50,7 +50,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 			};
 
 			Target = CreateTarget(dialogService: stub);
-			Target.SelectedSoundBoard = new SoundBoard();
+			Target.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
 
 			stub.Stub(service => service.OpenFileDialog(null, null)).IgnoreArguments().Return(returnedFiles);
 
@@ -75,7 +75,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 
 			Target = CreateTarget(dialogService: stub);
 
-			Target.SelectedSoundBoard = new SoundBoard();
+			Target.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
 
 			//Act
 			Target.Commands.AddSoundCommand.Execute(null);
@@ -111,7 +111,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 			ISound soundToRemove = MockRepository.GenerateStub<ISound>();
 
 			Target = CreateTarget();
-			Target.SelectedSoundBoard = new SoundBoard
+			Target.SelectedSoundBoard = new SoundBoard.Model.SoundBoard
 			{
 				Sounds = new ObservableCollection<ISound> {soundToRemove}
 			};
@@ -224,7 +224,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 		{
 			Target = CreateTarget();
 
-			Target.SelectedSoundBoard = new SoundBoard();
+			Target.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
 
 			Target.Commands.RemoveSoundBoardCommand.CanExecute(null).Should().BeTrue();
 		}
@@ -233,7 +233,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 		public void RemoveSoundBoardCommandExecute__RemovesSelectedSoundBoardFromSoundsBoard()
 		{
 			//Arrange
-			SoundBoard soundBoardToRemove = new SoundBoard();
+			SoundBoard.Model.SoundBoard soundBoardToRemove = new SoundBoard.Model.SoundBoard();
 
 			Target = CreateTarget();
 			Target.SoundBoards.Add(soundBoardToRemove);

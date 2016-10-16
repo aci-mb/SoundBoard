@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
-namespace AcillatemSoundBoard.Helpers
+namespace SoundBoard.Helpers
 {
     public class ErrorInfo : INotifyPropertyChanged
     {

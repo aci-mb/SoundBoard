@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace AcillatemSoundBoard.Helpers
+namespace SoundBoard.Helpers
 {
     public class OpenWindowCommand<T> : DelegateCommand where T : Window, new()
     {

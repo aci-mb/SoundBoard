@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
-using AcillatemSoundBoard.Annotations;
-using AcillatemSoundBoard.Helpers;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Properties;
-using AcillatemSoundBoard.Services;
-using AcillatemSoundBoard.View;
 using Ninject;
+using SoundBoard.Annotations;
+using SoundBoard.Helpers;
+using SoundBoard.Model;
+using SoundBoard.Properties;
+using SoundBoard.Services;
+using SoundBoard.View;
 
-namespace AcillatemSoundBoard.ViewModel
+namespace SoundBoard.ViewModel
 {
     public class SoundContextMenuCommands
     {

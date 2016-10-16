@@ -6,8 +6,8 @@
     <ProjectGuid>{DB7FE3C5-C46A-4A3A-9C12-2717776CF33E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AcillatemSoundBoard.Tests</RootNamespace>
-    <AssemblyName>AcillatemSoundBoard.Tests</AssemblyName>
+    <RootNamespace>SoundBoard.Tests</RootNamespace>
+    <AssemblyName>SoundBoard.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

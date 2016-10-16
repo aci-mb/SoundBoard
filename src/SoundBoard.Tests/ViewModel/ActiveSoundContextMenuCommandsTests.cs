@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.ViewModel;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
+using SoundBoard.Model;
+using SoundBoard.ViewModel;
 
-namespace AcillatemSoundBoard.Tests.ViewModel
+namespace SoundBoard.Tests.ViewModel
 {
     [TestClass]
     public class ActiveSoundContextMenuCommandsTests

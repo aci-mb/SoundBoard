@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace AcillatemSoundBoard.View
+namespace SoundBoard.View
 {
 	/// <summary>
 	/// Interaction logic for NameDialog.xaml

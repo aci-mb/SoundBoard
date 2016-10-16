@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Services.SoundImplementation.CsCore;
+using SoundBoard.Model;
+using SoundBoard.Services.SoundImplementation.CsCore;
 
-namespace AcillatemSoundBoard.Services
+namespace SoundBoard.Services
 {
     internal class DesignModeSoundBoardRepository : ISoundBoardRepository
     {
-        public IEnumerable<SoundBoard> GetSoundBoards()
+        public IEnumerable<Model.SoundBoard> GetSoundBoards()
         {
-            yield return new SoundBoard
+            yield return new Model.SoundBoard
             {
                 Name = "Cthulhu 1",
                 Sounds = new ObservableCollection<ISound>(new ISound[]
@@ -30,7 +30,7 @@ namespace AcillatemSoundBoard.Services
                 })
             };
 
-            yield return new SoundBoard
+            yield return new Model.SoundBoard
             {
                 Name = "DSA 1",
                 Sounds = new ObservableCollection<ISound>(new ISound[]
@@ -44,12 +44,12 @@ namespace AcillatemSoundBoard.Services
             };
         }
 
-        public void SetSoundBoards(IEnumerable<SoundBoard> soundBoards)
+        public void SetSoundBoards(IEnumerable<Model.SoundBoard> soundBoards)
         {
             //Nothing to do here, it's just demo data
         }
 
-        public bool AreSoundBoardsDifferent(IEnumerable<SoundBoard> soundBoards)
+        public bool AreSoundBoardsDifferent(IEnumerable<Model.SoundBoard> soundBoards)
         {
             return false;
         }

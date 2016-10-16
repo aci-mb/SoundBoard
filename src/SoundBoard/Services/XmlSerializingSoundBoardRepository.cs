@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Services.SoundImplementation;
+using SoundBoard.Model;
+using SoundBoard.Services.SoundImplementation;
 
-namespace AcillatemSoundBoard.Services
+namespace SoundBoard.Services
 {
     public class XmlSerializingSoundBoardRepository : ISoundBoardRepository
     {
@@ -18,36 +18,40 @@ namespace AcillatemSoundBoard.Services
 		    _soundFactory = soundFactory;
 	    }
 
-	    public IEnumerable<SoundBoard> GetSoundBoards()
+	    public IEnumerable<Model.SoundBoard> GetSoundBoards()
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(AcillatemSoundBoardData));
+                XmlSerializer serializer = new XmlSerializer(typeof(SoundBoardData));
                 using (TextReader reader = new StreamReader(XmlFile))
                 {
-                    return
-                        from xmlBoard
-                            in (serializer.Deserialize(reader) as AcillatemSoundBoardData).SoundBoards
-                        select xmlBoard.ToSoundBoard(_soundFactory);
+	                SoundBoardData soundBoardData = serializer.Deserialize(reader) as SoundBoardData;
+	                if (soundBoardData == null)
+	                {
+		                return Enumerable.Empty<Model.SoundBoard>();
+	                }
+
+	                return from xmlBoard in soundBoardData.SoundBoards
+		                select xmlBoard.ToSoundBoard(_soundFactory);
                 }
             }
             catch (Exception)
             {
-                return Enumerable.Empty<SoundBoard>();
+                return Enumerable.Empty<Model.SoundBoard>();
             }
         }
 
-        public void SetSoundBoards(IEnumerable<SoundBoard> soundBoards)
+        public void SetSoundBoards(IEnumerable<Model.SoundBoard> soundBoards)
         {
             try
             {
-                AcillatemSoundBoardData dataObject = new AcillatemSoundBoardData
+                SoundBoardData dataObject = new SoundBoardData
                 {
                     SoundBoards = (from soundBoard in soundBoards
                                   select new XmlSoundBoard(soundBoard)).ToArray()
                 };
 
-                XmlSerializer serializer = new XmlSerializer(typeof(AcillatemSoundBoardData));
+                XmlSerializer serializer = new XmlSerializer(typeof(SoundBoardData));
                 using (TextWriter textWriter = new StreamWriter(XmlFile))
                 {
                     serializer.Serialize(textWriter, dataObject);
@@ -59,14 +63,15 @@ namespace AcillatemSoundBoard.Services
             }
         }
 
-        public bool AreSoundBoardsDifferent(IEnumerable<SoundBoard> soundBoards)
+        public bool AreSoundBoardsDifferent(IEnumerable<Model.SoundBoard> soundBoards)
         {
-            IEnumerable<SoundBoard> savedBoards = GetSoundBoards().ToArray();
-            return ! (savedBoards.Count() == soundBoards.Count()
-                && savedBoards.All(savedBoard => soundBoards.Any(currentBoard => AreBoardsEqual(currentBoard, savedBoard))));
+            IEnumerable<Model.SoundBoard> savedBoards = GetSoundBoards().ToArray();
+	        Model.SoundBoard[] soundBoardsArray = soundBoards.ToArray();
+	        return ! (savedBoards.Count() == soundBoardsArray.Count()
+                && savedBoards.All(savedBoard => soundBoardsArray.Any(currentBoard => AreBoardsEqual(currentBoard, savedBoard))));
         }
 
-        private bool AreBoardsEqual(SoundBoard board, SoundBoard otherBoard)
+        private bool AreBoardsEqual(Model.SoundBoard board, Model.SoundBoard otherBoard)
         {
             return board.Name == otherBoard.Name
                    && board.Sounds.Count == otherBoard.Sounds.Count

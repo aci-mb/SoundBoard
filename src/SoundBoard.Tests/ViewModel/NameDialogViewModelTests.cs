@@ -1,8 +1,8 @@
-﻿using AcillatemSoundBoard.ViewModel;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SoundBoard.ViewModel;
 
-namespace AcillatemSoundBoard.Tests.ViewModel
+namespace SoundBoard.Tests.ViewModel
 {
     [TestClass]
     public class NameDialogViewModelTests

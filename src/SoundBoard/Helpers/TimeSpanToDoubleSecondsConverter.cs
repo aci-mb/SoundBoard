@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace AcillatemSoundBoard.Helpers
+namespace SoundBoard.Helpers
 {
     public class TimeSpanToDoubleSecondsConverter : TypedValueConverterBase<TimeSpan, double?>
     {

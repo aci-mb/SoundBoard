@@ -3,7 +3,7 @@ using System.IO;
 using CSCore;
 using NVorbis;
 
-namespace AcillatemSoundBoard.Services.SoundImplementation.CsCore
+namespace SoundBoard.Services.SoundImplementation.CsCore
 {
 	/// <summary>
 	/// NVorbis support class for CsCore

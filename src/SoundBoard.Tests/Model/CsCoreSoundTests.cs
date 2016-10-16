@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
-using AcillatemSoundBoard.Services.SoundImplementation.CsCore;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SoundBoard.Services.SoundImplementation.CsCore;
 
-namespace AcillatemSoundBoard.Tests.Model
+namespace SoundBoard.Tests.Model
 {
     [TestClass]
     public class CsCoreSoundTests

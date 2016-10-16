@@ -1,6 +1,6 @@
 using System;
 
-namespace AcillatemSoundBoard.Model
+namespace SoundBoard.Model
 {
 	public class SoundStateChangedEventArgs : EventArgs
 	{

@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AcillatemSoundBoard.Model;
+using SoundBoard.Model;
 
-namespace AcillatemSoundBoard.Services
+namespace SoundBoard.Services
 {
 	public class ObservableSoundService : IObservableSoundService
 	{
@@ -17,7 +17,7 @@ namespace AcillatemSoundBoard.Services
 			ActiveSounds = new ReadOnlyObservableCollection<ISound>(_activeSounds);
 		}
 
-		public ReadOnlyObservableCollection<ISound> ActiveSounds { get; private set; }
+		public ReadOnlyObservableCollection<ISound> ActiveSounds { get; }
 
 		public void Add(ISound sound)
 		{

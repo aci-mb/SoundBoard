@@ -1,8 +1,8 @@
-﻿using AcillatemSoundBoard.ViewModel.Converters;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SoundBoard.ViewModel.Converters;
 
-namespace AcillatemSoundBoard.Tests.ViewModel.Converters
+namespace SoundBoard.Tests.ViewModel.Converters
 {
     [TestClass]
     public class BooleanToOpacityConverterTests

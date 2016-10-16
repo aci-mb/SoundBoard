@@ -1,6 +1,6 @@
-﻿using AcillatemSoundBoard.Model;
+﻿using SoundBoard.Model;
 
-namespace AcillatemSoundBoard.Services.SoundImplementation
+namespace SoundBoard.Services.SoundImplementation
 {
 	public interface ISoundFactory
 	{

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Xml.Serialization;
-using AcillatemSoundBoard.Services.SoundImplementation;
+using SoundBoard.Services.SoundImplementation;
 
-namespace AcillatemSoundBoard.Model
+namespace SoundBoard.Model
 {
     public sealed class XmlSound
     {

@@ -2,22 +2,24 @@
 using System.Linq;
 using System.Text;
 using System.Windows;
-using AcillatemSoundBoard.View;
-using AcillatemSoundBoard.ViewModel;
 using Microsoft.Win32;
+using SoundBoard.View;
+using SoundBoard.ViewModel;
 
-namespace AcillatemSoundBoard.Services
+namespace SoundBoard.Services
 {
     public class DialogService : IDialogService
     {
         public IEnumerable<string> OpenFileDialog(string title, IDictionary<string, string> filters)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = FiltersToString(filters);
-            openFileDialog.Multiselect = true;
-            openFileDialog.Title = title;
+	        OpenFileDialog openFileDialog = new OpenFileDialog
+	        {
+		        Filter = FiltersToString(filters),
+		        Multiselect = true,
+		        Title = title
+	        };
 
-            var dialogResult = openFileDialog.ShowDialog();
+	        bool? dialogResult = openFileDialog.ShowDialog();
             
             return dialogResult.HasValue && dialogResult.Value
                 ? openFileDialog.FileNames
@@ -26,7 +28,7 @@ namespace AcillatemSoundBoard.Services
 
         public string NameDialog(Window parent, string title, string prompt, string initialName)
         {
-            var viewModel = new NameDialogViewModel
+            NameDialogViewModel viewModel = new NameDialogViewModel
             {
                 Title = title,
                 Prompt = prompt,
@@ -39,7 +41,7 @@ namespace AcillatemSoundBoard.Services
                 Owner = parent                
             };
 
-            var dialogResult = nameDialog.ShowDialog();
+            bool? dialogResult = nameDialog.ShowDialog();
             
             return dialogResult.HasValue && dialogResult.Value
                 ? viewModel.Name
@@ -48,17 +50,17 @@ namespace AcillatemSoundBoard.Services
 
         public bool QuestionDialog(Window parent, string title, string question)
         {
-            return new QuestionDialog
-            {
-                Owner = parent,
-                DataContext = new QuestionDialogViewModel
-                {
-                    Title = title,
-                    Question = question
-                }
-            }
-            .ShowDialog()
-            .GetValueOrDefault();
+	        return new QuestionDialog
+	        {
+		        Owner = parent,
+		        DataContext = new QuestionDialogViewModel
+		        {
+			        Title = title,
+			        Question = question
+		        }
+	        }
+		        .ShowDialog()
+		        .GetValueOrDefault();
         }
 
         private string FiltersToString(IEnumerable<KeyValuePair<string, string>> filters)

@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Services;
-using AcillatemSoundBoard.View;
-using AcillatemSoundBoard.ViewModel;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 using Rhino.Mocks;
+using SoundBoard.Model;
+using SoundBoard.Services;
+using SoundBoard.View;
+using SoundBoard.ViewModel;
 
-namespace AcillatemSoundBoard.Tests.ViewModel
+namespace SoundBoard.Tests.ViewModel
 {
 	[TestClass]
 	public class SoundContextMenuCommandsTests
@@ -324,7 +324,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 		public void RemoveSoundsCommandCanExecute_SoundBoardIsNotNullAndParameterIsIListWith3Sounds_ReturnsTrue()
 		{
 			var stub = MockRepository.GenerateStub<IMainWindowViewModel>();
-			stub.SelectedSoundBoard = new SoundBoard();
+			stub.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
 			Target = CreateTargetWithDefaultStubs(stub);
 
 			Target.RemoveSoundsCommand.CanExecute(new Collection<ISound>
@@ -340,7 +340,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 		public void RemoveSoundsCommandCanExecute_SoundBoardIsNotNullAndParameterIsIListWith1Sound_ReturnsTrue()
 		{
 			var stub = MockRepository.GenerateStub<IMainWindowViewModel>();
-			stub.SelectedSoundBoard = new SoundBoard();
+			stub.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
 			Target = CreateTargetWithDefaultStubs(stub);
 
 			Target.RemoveSoundsCommand.CanExecute(new Collection<ISound> {MockRepository.GenerateStub<ISound>()})
@@ -379,7 +379,7 @@ namespace AcillatemSoundBoard.Tests.ViewModel
 			};
 
 			var stub = MockRepository.GenerateStub<IMainWindowViewModel>();
-			stub.SelectedSoundBoard = new SoundBoard
+			stub.SelectedSoundBoard = new SoundBoard.Model.SoundBoard
 			{
 				Sounds = new ObservableCollection<ISound>(selectedSounds)
 				{

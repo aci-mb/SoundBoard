@@ -1,8 +1,8 @@
 using System;
 using System.ComponentModel;
-using AcillatemSoundBoard.Helpers;
+using SoundBoard.Helpers;
 
-namespace AcillatemSoundBoard.Model
+namespace SoundBoard.Model
 {
 	public interface ISoundInfo : INotifyPropertyChanged, ICloneable
 	{

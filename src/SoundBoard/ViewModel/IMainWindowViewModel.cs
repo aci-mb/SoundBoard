@@ -1,14 +1,14 @@
 ﻿using System.Collections.ObjectModel;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Services;
+using SoundBoard.Model;
+using SoundBoard.Services;
 
-namespace AcillatemSoundBoard.ViewModel
+namespace SoundBoard.ViewModel
 {
     public interface IMainWindowViewModel
     {
-        ObservableCollection<SoundBoard> SoundBoards { get; set; }
+        ObservableCollection<Model.SoundBoard> SoundBoards { get; set; }
         ISound SelectedSound { get; set; }
-        SoundBoard SelectedSoundBoard { get; set; }
+        Model.SoundBoard SelectedSoundBoard { get; set; }
 		IObservableSoundService SoundService { get; }
         ISound SelectedActiveSound { get; set; }
     }

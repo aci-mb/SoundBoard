@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace AcillatemSoundBoard.Helpers
+namespace SoundBoard.Helpers
 {
     public class DialogViewModelBase : ViewModelBase
     {

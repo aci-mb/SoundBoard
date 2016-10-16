@@ -2,11 +2,11 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using AcillatemSoundBoard.Annotations;
-using AcillatemSoundBoard.Helpers;
-using AcillatemSoundBoard.Properties;
+using SoundBoard.Annotations;
+using SoundBoard.Helpers;
+using SoundBoard.Properties;
 
-namespace AcillatemSoundBoard.Model
+namespace SoundBoard.Model
 {
 	public class SoundInfo : ISoundInfo
 	{

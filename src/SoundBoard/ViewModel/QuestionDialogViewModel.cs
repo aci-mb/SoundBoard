@@ -1,6 +1,6 @@
-using AcillatemSoundBoard.Helpers;
+using SoundBoard.Helpers;
 
-namespace AcillatemSoundBoard.ViewModel
+namespace SoundBoard.ViewModel
 {
     public class QuestionDialogViewModel : DialogViewModelBase
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{FBBE4791-3659-478A-B794-6A45AD188C09}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AcillatemSoundBoard</RootNamespace>
-    <AssemblyName>AcillatemSoundBoard</AssemblyName>
+    <RootNamespace>SoundBoard</RootNamespace>
+    <AssemblyName>SoundBoard</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -146,7 +146,7 @@
     <Compile Include="Helpers\BooleanToToggleTextConverter.cs" />
     <Compile Include="Helpers\DialogCloser.cs" />
     <Compile Include="Helpers\DialogViewModelBase.cs" />
-    <Compile Include="Services\AcillatemSoundBoardData.cs" />
+    <Compile Include="Services\SoundBoardData.cs" />
     <Compile Include="Services\ObservableSoundService.cs" />
     <Compile Include="Services\XmlSerializingSoundBoardRepository.cs" />
     <Compile Include="Helpers\ContextMenuCommand.cs" />

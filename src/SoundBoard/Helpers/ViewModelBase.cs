@@ -1,18 +1,15 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using AcillatemSoundBoard.Annotations;
+using SoundBoard.Annotations;
 
-namespace AcillatemSoundBoard.Helpers
+namespace SoundBoard.Helpers
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        public static bool IsInDesignMode
-        {
-            get { return GetDesignModePropertyValue(); }
-        }
+        public static bool IsInDesignMode => GetDesignModePropertyValue();
 
-        private static bool GetDesignModePropertyValue()
+	    private static bool GetDesignModePropertyValue()
         {
             return (bool) DependencyPropertyDescriptor
                 .FromProperty(DesignerProperties.IsInDesignModeProperty, typeof (FrameworkElement))
@@ -25,7 +22,7 @@ namespace AcillatemSoundBoard.Helpers
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+	        handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

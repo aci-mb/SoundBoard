@@ -1,7 +1,7 @@
-using AcillatemSoundBoard.View;
 using Ninject;
+using SoundBoard.View;
 
-namespace AcillatemSoundBoard.ViewModel
+namespace SoundBoard.ViewModel
 {
     public static class ContainerConfigurator
     {

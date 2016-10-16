@@ -1,4 +1,4 @@
-namespace AcillatemSoundBoard.Model
+namespace SoundBoard.Model
 {
 	public enum SoundState
 	{

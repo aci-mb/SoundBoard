@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
-using AcillatemSoundBoard.Helpers;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Properties;
+using SoundBoard.Properties;
+using SoundBoard.Helpers;
+using SoundBoard.Model;
 
-namespace AcillatemSoundBoard.ViewModel
+namespace SoundBoard.ViewModel
 {
     public class ActiveSoundContextMenuCommands
     {
