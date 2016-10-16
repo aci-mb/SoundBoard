@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using AcillatemSoundBoard.Annotations;
 
@@ -44,8 +43,8 @@ namespace AcillatemSoundBoard.Model
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChangedEventHandler handler = PropertyChanged;
+	        handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

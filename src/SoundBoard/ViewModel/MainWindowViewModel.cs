@@ -25,7 +25,7 @@ namespace AcillatemSoundBoard.ViewModel
         private ISound _selectedSound;
         private SoundBoard _selectedSoundBoard;
         private ISound _selectedActiveSound;
-	    private ISoundFactory _soundFactory;
+	    private readonly ISoundFactory _soundFactory;
 
 	    public IObservableSoundService SoundService { get; }
 
@@ -120,56 +120,49 @@ namespace AcillatemSoundBoard.ViewModel
 
         private static Dictionary<string, string> GetFilters()
         {
-            return new Dictionary<string, string>
-            {
-                {
-                    Resources.MainWindowViewModel_AddSounds_Supported_Files,
-                    string.Join(Resources.MainWindowViewModel_AddSounds__Supported_Files_Separator,
-                        new[]
-                        {
-                            Resources.MainWindowViewModel_AddSounds___wav,
-                            Resources.MainWindowViewModel_AddSounds___ogg,
-                            Resources.MainWindowViewModel_AddSounds___mp3,
-                            Resources.MainWindowViewModel_AddSounds___flac,
-                            Resources.MainWindowViewModel_AddSounds___mod,
-                            Resources.MainWindowViewModel_AddSounds___it,
-                            Resources.MainWindowViewModel_AddSounds___s3d,
-                            Resources.MainWindowViewModel_AddSounds___xm
-                        })
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_RIFF_WAVE,
-                    Resources.MainWindowViewModel_AddSounds___wav
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_Ogg_Vorbis,
-                    Resources.MainWindowViewModel_AddSounds___ogg
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_MPEG_1_Audio_Layer_3,
-                    Resources.MainWindowViewModel_AddSounds___mp3
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_Free_Lossless_Audio_Codec,
-                    Resources.MainWindowViewModel_AddSounds___flac
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_Amiga_Modules,
-                    Resources.MainWindowViewModel_AddSounds___mod
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_Impulse_Tracker,
-                    Resources.MainWindowViewModel_AddSounds___it
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_Scream_Tracker_3,
-                    Resources.MainWindowViewModel_AddSounds___s3d
-                },
-                {
-                    Resources.MainWindowViewModel_AddSounds_Fast_Tracker_2,
-                    Resources.MainWindowViewModel_AddSounds___xm
-                },
-            };
+	        return new Dictionary<string, string>
+	        {
+		        {
+			        Resources.MainWindowViewModel_AddSounds_Supported_Files,
+			        string.Join(Resources.MainWindowViewModel_AddSounds__Supported_Files_Separator,
+				        Resources.MainWindowViewModel_AddSounds___wav, Resources.MainWindowViewModel_AddSounds___ogg,
+				        Resources.MainWindowViewModel_AddSounds___mp3, Resources.MainWindowViewModel_AddSounds___flac,
+				        Resources.MainWindowViewModel_AddSounds___mod, Resources.MainWindowViewModel_AddSounds___it,
+				        Resources.MainWindowViewModel_AddSounds___s3d, Resources.MainWindowViewModel_AddSounds___xm)
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_RIFF_WAVE,
+			        Resources.MainWindowViewModel_AddSounds___wav
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_Ogg_Vorbis,
+			        Resources.MainWindowViewModel_AddSounds___ogg
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_MPEG_1_Audio_Layer_3,
+			        Resources.MainWindowViewModel_AddSounds___mp3
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_Free_Lossless_Audio_Codec,
+			        Resources.MainWindowViewModel_AddSounds___flac
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_Amiga_Modules,
+			        Resources.MainWindowViewModel_AddSounds___mod
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_Impulse_Tracker,
+			        Resources.MainWindowViewModel_AddSounds___it
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_Scream_Tracker_3,
+			        Resources.MainWindowViewModel_AddSounds___s3d
+		        },
+		        {
+			        Resources.MainWindowViewModel_AddSounds_Fast_Tracker_2,
+			        Resources.MainWindowViewModel_AddSounds___xm
+		        },
+	        };
         }
 
         private static ISoundBoardRepository CreateSoundBoardRepository(ISoundFactory soundFactory)

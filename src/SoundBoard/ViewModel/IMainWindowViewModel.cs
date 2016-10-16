@@ -9,7 +9,6 @@ namespace AcillatemSoundBoard.ViewModel
         ObservableCollection<SoundBoard> SoundBoards { get; set; }
         ISound SelectedSound { get; set; }
         SoundBoard SelectedSoundBoard { get; set; }
-        //ObservableCollection<ISound> ActiveSounds { get; set; }
 		IObservableSoundService SoundService { get; }
         ISound SelectedActiveSound { get; set; }
     }

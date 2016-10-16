@@ -11,6 +11,6 @@ namespace AcillatemSoundBoard.ViewModel
             Kernel.Bind<MainWindow>().To<MainWindow>().InSingletonScope();
         }
 
-        public static IKernel Kernel { get; private set; }
+        public static IKernel Kernel { get; }
     }
 }

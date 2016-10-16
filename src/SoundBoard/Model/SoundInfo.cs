@@ -8,7 +8,7 @@ using AcillatemSoundBoard.Properties;
 
 namespace AcillatemSoundBoard.Model
 {
-	public class SoundInfo : ISoundInfo
+	public sealed class SoundInfo : ISoundInfo
 	{
 		private string _fileName;
 		private ErrorInfo _errorInfo;
@@ -23,7 +23,7 @@ namespace AcillatemSoundBoard.Model
 			ErrorInfo = new ErrorInfo();
 		}
 
-		public virtual string FileName
+		public string FileName
 		{
 			get { return _fileName; }
 			set
@@ -47,7 +47,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public virtual ErrorInfo ErrorInfo
+		public ErrorInfo ErrorInfo
 		{
 			get { return _errorInfo; }
 			set
@@ -58,7 +58,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public virtual string Name
+		public string Name
 		{
 			get { return _name; }
 			set
@@ -69,7 +69,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public virtual int VolumeInPercent
+		public int VolumeInPercent
 		{
 			get { return _volumeInPercent; }
 			set
@@ -80,7 +80,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public virtual bool IsLooped
+		public bool IsLooped
 		{
 			get { return _isLooped; }
 			set
@@ -91,7 +91,7 @@ namespace AcillatemSoundBoard.Model
 			}
 		}
 
-		public virtual TimeSpan Delay
+		public TimeSpan Delay
 		{
 			get { return _delay; }
 			set
@@ -105,7 +105,7 @@ namespace AcillatemSoundBoard.Model
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		private void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}

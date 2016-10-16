@@ -17,7 +17,7 @@ namespace AcillatemSoundBoard.ViewModel
         {
             if (mainWindowViewModel == null)
             {
-                throw new ArgumentNullException("mainWindowViewModel");
+                throw new ArgumentNullException(nameof(mainWindowViewModel));
             }
             _mainWindowViewModel = mainWindowViewModel;
             CreateCommands();
@@ -82,14 +82,14 @@ namespace AcillatemSoundBoard.ViewModel
         {
             if (parameter == null)
             {
-                throw new ArgumentNullException("parameter");
+                throw new ArgumentNullException(nameof(parameter));
             }
             IList selectedSounds = parameter as IList;
             if (selectedSounds == null)
             {
                 throw new ArgumentException(
                     string.Format("Parameter must be of type {0}", typeof(IList)),
-                    "parameter");
+                    nameof(parameter));
             }
             return selectedSounds;
         }

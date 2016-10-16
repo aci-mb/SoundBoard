@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using AcillatemSoundBoard.Helpers;
+﻿using AcillatemSoundBoard.Helpers;
 
 namespace AcillatemSoundBoard.ViewModel
 {

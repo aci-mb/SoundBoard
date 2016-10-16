@@ -23,11 +23,11 @@ namespace AcillatemSoundBoard.ViewModel
         {
             if (mainWindowViewModel == null)
             {
-                throw new ArgumentNullException("mainWindowViewModel");
+                throw new ArgumentNullException(nameof(mainWindowViewModel));
             }
             if (dialogService == null)
             {
-                throw new ArgumentNullException("dialogService");
+                throw new ArgumentNullException(nameof(dialogService));
             }
 
             _mainWindowViewModel = mainWindowViewModel;
@@ -76,13 +76,13 @@ namespace AcillatemSoundBoard.ViewModel
 
         private void RenameSound(object parameter)
         {
-            var selectedSounds = ConvertParameterToSelectedSoundsOrThrow(parameter);
+            IList selectedSounds = ConvertParameterToSelectedSoundsOrThrow(parameter);
 
             ISound sound = (selectedSounds.Count == 1 ? selectedSounds[0] : null) as ISound;
 
             if (sound == null)
             {
-                throw new ArgumentException("Only a single sound may be selected for renaming", "parameter");
+                throw new ArgumentException("Only a single sound may be selected for renaming", nameof(parameter));
             }
 
             string newName = _dialogService.NameDialog(
@@ -161,9 +161,9 @@ namespace AcillatemSoundBoard.ViewModel
         {
             IList selectedSounds = ConvertParameterToSelectedSoundsOrThrow(parameter);
 
-            foreach (var soundObject in selectedSounds)
+            foreach (ISound soundObject in selectedSounds)
             {
-                _mainWindowViewModel.SoundService.Add((soundObject as ISound).Clone() as ISound);
+                _mainWindowViewModel.SoundService.Add((ISound) soundObject.Clone());
             }
         }
 
@@ -171,14 +171,14 @@ namespace AcillatemSoundBoard.ViewModel
         {
             if (parameter == null)
             {
-                throw new ArgumentNullException("parameter");
+                throw new ArgumentNullException(nameof(parameter));
             }
             IList selectedSounds = parameter as IList;
             if (selectedSounds == null)
             {
                 throw new ArgumentException(
                     string.Format("Parameter must be of type {0}", typeof (IList)),
-                    "parameter");
+                    nameof(parameter));
             }
             return selectedSounds;
         }
