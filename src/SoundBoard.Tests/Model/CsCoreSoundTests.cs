@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using AcillatemSoundBoard.Model;
-using AcillatemSoundBoard.Services.SoundImplementation;
+﻿using System.ComponentModel;
 using AcillatemSoundBoard.Services.SoundImplementation.CsCore;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,7 +27,7 @@ namespace AcillatemSoundBoard.Tests.Model
                 VolumeInPercent = 42
             };
 
-            var clone = Target.Clone() as CsCoreSound;
+            CsCoreSound clone = Target.Clone() as CsCoreSound;
 
             clone.ShouldBeEquivalentTo(Target);
         }

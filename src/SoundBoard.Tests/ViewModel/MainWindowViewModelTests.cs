@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using AcillatemSoundBoard.Model;
 using AcillatemSoundBoard.Services;
-using AcillatemSoundBoard.Services.SoundImplementation;
 using AcillatemSoundBoard.View;
 using AcillatemSoundBoard.ViewModel;
 using FluentAssertions;
@@ -15,480 +14,478 @@ using Rhino.Mocks;
 
 namespace AcillatemSoundBoard.Tests.ViewModel
 {
-    [TestClass]
-    public class MainWindowViewModelTests
-    {
-        public MainWindowViewModel Target { get; set; }
+	[TestClass]
+	public class MainWindowViewModelTests
+	{
+		public MainWindowViewModel Target { get; set; }
 
-        [TestMethod]
-        public void AddSoundCommandCanExecute_SelectedSoundBoardIsNull_ReturnsFalse()
-        {
-            Target = CreateTarget();
+		[TestMethod]
+		public void AddSoundCommandCanExecute_SelectedSoundBoardIsNull_ReturnsFalse()
+		{
+			Target = CreateTarget();
 
-            Target.Commands.AddSoundCommand.CanExecute(null).Should().BeFalse();
-        }
+			Target.Commands.AddSoundCommand.CanExecute(null).Should().BeFalse();
+		}
 
-        [TestMethod]
-        public void AddSoundCommandCanExecute_SelectedSoundBoardIsNotNull_ReturnsTrue()
-        {
-            Target = CreateTarget();
-            
-            Target.SelectedSoundBoard = new SoundBoard();
+		[TestMethod]
+		public void AddSoundCommandCanExecute_SelectedSoundBoardIsNotNull_ReturnsTrue()
+		{
+			Target = CreateTarget();
 
-            Target.Commands.AddSoundCommand.CanExecute(null).Should().BeTrue();
-        }
+			Target.SelectedSoundBoard = new SoundBoard();
 
-        [TestMethod]
-        public void AddSoundCommandExecute__AddsSoundToSoundsCollection()
-        {
-            //Arrange
-            IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-	        string[] returnedFiles =
-	        {
-		        @"C:\Creeping Death.mp3",
-		        @"C:\Out of Control.wma",
-		        @"C:\Bell.ogg"
-	        };
+			Target.Commands.AddSoundCommand.CanExecute(null).Should().BeTrue();
+		}
 
-            Target = CreateTarget(dialogService: stub);
-            Target.SelectedSoundBoard = new SoundBoard();
+		[TestMethod]
+		public void AddSoundCommandExecute__AddsSoundToSoundsCollection()
+		{
+			//Arrange
+			IDialogService stub = MockRepository.GenerateStub<IDialogService>();
+			string[] returnedFiles =
+			{
+				@"C:\Creeping Death.mp3",
+				@"C:\Out of Control.wma",
+				@"C:\Bell.ogg"
+			};
 
-            stub.Stub(service => service.OpenFileDialog(null, null)).IgnoreArguments().Return(returnedFiles);
+			Target = CreateTarget(dialogService: stub);
+			Target.SelectedSoundBoard = new SoundBoard();
 
-            //Act
-            Target.Commands.AddSoundCommand.Execute(null);
+			stub.Stub(service => service.OpenFileDialog(null, null)).IgnoreArguments().Return(returnedFiles);
 
-            //Assert
-            Target.SelectedSoundBoard.Sounds.Should()
-                .Contain(sound => sound.FileName == returnedFiles[0])
-                .And.Contain(sound => sound.FileName == returnedFiles[1])
-                .And.Contain(sound => sound.FileName == returnedFiles[2]);
-        }
+			//Act
+			Target.Commands.AddSoundCommand.Execute(null);
 
-        [TestMethod]
-        public void AddSoundCommandExecute__AddedSoundIsSelected()
-        {
-            //Arrange
-            IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-            IEnumerable<string> returnedFiles = new[] {@"C:\SomeNewFile.mp3"};
+			//Assert
+			Target.SelectedSoundBoard.Sounds.Should()
+				.Contain(sound => sound.FileName == returnedFiles[0])
+				.And.Contain(sound => sound.FileName == returnedFiles[1])
+				.And.Contain(sound => sound.FileName == returnedFiles[2]);
+		}
 
-            stub.Stub(service => service.OpenFileDialog(null, null)).IgnoreArguments().Return(returnedFiles);
+		[TestMethod]
+		public void AddSoundCommandExecute__AddedSoundIsSelected()
+		{
+			//Arrange
+			IDialogService stub = MockRepository.GenerateStub<IDialogService>();
+			IEnumerable<string> returnedFiles = new[] {@"C:\SomeNewFile.mp3"};
 
-	        Target = CreateTarget(dialogService: stub);
+			stub.Stub(service => service.OpenFileDialog(null, null)).IgnoreArguments().Return(returnedFiles);
 
-            Target.SelectedSoundBoard = new SoundBoard();
+			Target = CreateTarget(dialogService: stub);
 
-            //Act
-            Target.Commands.AddSoundCommand.Execute(null);
+			Target.SelectedSoundBoard = new SoundBoard();
 
-            //Assert
-            Target.SelectedSound.FileName.Should().Be(returnedFiles.First());
-        }
+			//Act
+			Target.Commands.AddSoundCommand.Execute(null);
+
+			//Assert
+			Target.SelectedSound.FileName.Should().Be(returnedFiles.First());
+		}
 
 
-        
+		[TestMethod]
+		public void RemoveSoundCommandCanExecute_SelectedSoundIsNull_ReturnsFalse()
+		{
+			Target = CreateTarget();
 
-        [TestMethod]
-        public void RemoveSoundCommandCanExecute_SelectedSoundIsNull_ReturnsFalse()
-        {
-            Target = CreateTarget();
+			Target.Commands.RemoveSoundCommand.CanExecute(null).Should().BeFalse();
+		}
 
-            Target.Commands.RemoveSoundCommand.CanExecute(null).Should().BeFalse();
-        }
+		[TestMethod]
+		public void RemoveSoundCommandCanExecute_SelectedSoundIsNotNull_ReturnsTrue()
+		{
+			Target = CreateTarget();
 
-        [TestMethod]
-        public void RemoveSoundCommandCanExecute_SelectedSoundIsNotNull_ReturnsTrue()
-        {
-            Target = CreateTarget();
-
-	        Target.SelectedSound = MockRepository.GenerateStub<ISound>();
+			Target.SelectedSound = MockRepository.GenerateStub<ISound>();
 
 
 			Target.Commands.RemoveSoundCommand.CanExecute(null).Should().BeTrue();
-        }
+		}
 
-        [TestMethod]
-        public void RemoveSoundCommandExecute__RemovesSelectedSoundFromSounds()
-        {
-            //Arrange
-            ISound soundToRemove = MockRepository.GenerateStub<ISound>();
+		[TestMethod]
+		public void RemoveSoundCommandExecute__RemovesSelectedSoundFromSounds()
+		{
+			//Arrange
+			ISound soundToRemove = MockRepository.GenerateStub<ISound>();
 
-            Target = CreateTarget();
-            Target.SelectedSoundBoard = new SoundBoard
-            {
-                Sounds = new ObservableCollection<ISound> {soundToRemove}
-            };
+			Target = CreateTarget();
+			Target.SelectedSoundBoard = new SoundBoard
+			{
+				Sounds = new ObservableCollection<ISound> {soundToRemove}
+			};
 
-            Target.SelectedSound = soundToRemove;
+			Target.SelectedSound = soundToRemove;
 
-            //Act
-            Target.Commands.RemoveSoundCommand.Execute(soundToRemove);
-            
-            //Assert
-            Target.SelectedSoundBoard.Sounds.Should().NotContain(soundToRemove);
-        }
-
-
-        [TestMethod]
-        public void AddSoundBoardCommandCanExecute__ReturnsTrue()
-        {
-            Target = CreateTarget();
-
-            Target.Commands.AddSoundBoardCommand.CanExecute(null).Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void AddSoundBoardCommandExecute__CallsNameDialogWithMainWindowAsParentParameter()
-        {
-            //Arrange
-            MainWindow expectedParent = new MainWindow();
-            IDialogService mock = MockRepository.GenerateMock<IDialogService>();
-            IKernel container = new StandardKernel();
-            container.Bind<MainWindow>().ToConstant(expectedParent);
-
-            Target = CreateTarget(dialogService: mock, container: container);
-
-            mock.Expect(service => service.NameDialog(
-                Arg<Window>.Is.Same(expectedParent),
-                Arg<string>.Is.Anything,
-                Arg<string>.Is.Anything,
-                Arg<string>.Is.Anything)).Return(string.Empty);
-
-            //Act
-            Target.Commands.AddSoundBoardCommand.Execute(null);
-
-            //Assert
-            mock.VerifyAllExpectations();
-        }
-        
-        [TestMethod]
-        public void AddSoundBoardCommandExecute_NameDialogReturnsNotNull_AddsSoundBoardToSoundBoardsCollection()
-        {
-            //Arrange
-            IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-            const string returnedSoundBoardName = "My new soundboard";
-
-            Target = CreateTarget(dialogService: stub);
-
-            stub.Stub(service => service.NameDialog(null, null, null, null)).IgnoreArguments().Return(returnedSoundBoardName);
-
-            //Act
-            Target.Commands.AddSoundBoardCommand.Execute(null);
-
-            //Assert
-            Target.SoundBoards.Should().Contain(board => board.Name == returnedSoundBoardName);
-        }
-
-        [TestMethod]
-        public void AddSoundBoardCommandExecute_NameDialogReturnsNull_DoesNotAddSoundBoardToSoundBoardsCollection()
-        {
-            //Arrange
-            IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-
-            Target = CreateTarget(dialogService: stub);
-
-            stub.Stub(service => service.NameDialog(null, null, null, null)).IgnoreArguments().Return(null);
-
-            //Act
-            Target.Commands.AddSoundBoardCommand.Execute(null);
-
-            //Assert
-            Target.SoundBoards.Should().BeEmpty();
-        }
-
-        [TestMethod]
-        public void AddSoundBoardCommandExecute_NameDialogReturnsNotNull_AddedSoundBoardIsSelected()
-        {
-            //Arrange
-            const string nameOfNewSoundBoard = "My new sound board";
-            
-            IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-            stub.Stub(service => stub.NameDialog(null, null, null, null)).IgnoreArguments().Return(nameOfNewSoundBoard);
-
-            Target = CreateTarget(dialogService: stub);
-
-            //Act
-            Target.Commands.AddSoundBoardCommand.Execute(null);
-
-            //Assert
-            Target.SelectedSoundBoard.Name.Should().Be(nameOfNewSoundBoard);
-        }
-
-        [TestMethod]
-        public void RemoveSoundBoardCommandCanExecute_SelectedSoundBoardIsNull_ReturnsFalse()
-        {
-            Target = CreateTarget();
-
-            Target.Commands.RemoveSoundBoardCommand.CanExecute(null).Should().BeFalse();
-        }
-
-        [TestMethod]
-        public void RemoveSoundBoardCommandCanExecute_SelectedSoundBoardIsNotNull_ReturnsTrue()
-        {
-            Target = CreateTarget();
-
-            Target.SelectedSoundBoard = new SoundBoard();
-
-            Target.Commands.RemoveSoundBoardCommand.CanExecute(null).Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void RemoveSoundBoardCommandExecute__RemovesSelectedSoundBoardFromSoundsBoard()
-        {
-            //Arrange
-            SoundBoard soundBoardToRemove = new SoundBoard();
-
-            Target = CreateTarget();
-            Target.SoundBoards.Add(soundBoardToRemove);
-
-            Target.SelectedSoundBoard = soundBoardToRemove;
-
-            //Act
-            Target.Commands.RemoveSoundBoardCommand.Execute(soundBoardToRemove);
-
-            //Assert
-            Target.SoundBoards.Should().NotContain(soundBoardToRemove);
-        }
-
-
-        [TestMethod]
-        public void ActivateSingleSoundCommand_ParameterIsNull_ThrowsArgumentNullException()
-        {
-            Target = CreateTarget();
-
-            var execute = new Action(() => Target.Commands.ActivateSingleSoundCommand.Execute(null));
-
-            execute.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("parameter");
-        }
-
-        [TestMethod]
-        public void ActivateSingleSoundCommand_ParameterIsNotOfTypeSound_ThrowsArgumentException()
-        {
-            Target = CreateTarget();
-
-            var execute = new Action(() => Target.Commands.ActivateSingleSoundCommand.Execute("Not a sound"));
-
-            execute.ShouldThrow<ArgumentException>()
-                .WithMessage("Parameter must be of type " + typeof(ISound) + "*")
-                .And.ParamName.ShouldBeEquivalentTo("parameter");
-        }
-
-        [TestMethod]
-        public void ActivateSingleSoundCommand_ParameterIsNotNull_AddsCloneOfSoundToActiveSounds()
-        {
-            //Arrange
-	        ObservableCollection<ISound> activeSounds = new ObservableCollection<ISound>();
-	        IObservableSoundService observableSoundService = CommonStubsFactory.StubObservableSoundService(activeSounds);
-
-	        Target = CreateTarget(soundService: observableSoundService);
-            ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
-
-            //Act
-            Target.Commands.ActivateSingleSoundCommand.Execute(sound);
+			//Act
+			Target.Commands.RemoveSoundCommand.Execute(soundToRemove);
 
 			//Assert
-			activeSounds.Should().NotContain(s => ReferenceEquals(s, sound));
-			activeSounds.Single().ShouldBeEquivalentTo(sound);
-        }
+			Target.SelectedSoundBoard.Sounds.Should().NotContain(soundToRemove);
+		}
 
-        [TestMethod]
-        public void ActivateSingleSoundCommand_SelectedSoundIsNotNull_AddedSoundIsSelected()
-        {
-            //Arrange
-            Target = CreateTarget();
+
+		[TestMethod]
+		public void AddSoundBoardCommandCanExecute__ReturnsTrue()
+		{
+			Target = CreateTarget();
+
+			Target.Commands.AddSoundBoardCommand.CanExecute(null).Should().BeTrue();
+		}
+
+		[TestMethod]
+		public void AddSoundBoardCommandExecute__CallsNameDialogWithMainWindowAsParentParameter()
+		{
+			//Arrange
+			MainWindow expectedParent = new MainWindow();
+			IDialogService mock = MockRepository.GenerateMock<IDialogService>();
+			IKernel container = new StandardKernel();
+			container.Bind<MainWindow>().ToConstant(expectedParent);
+
+			Target = CreateTarget(dialogService: mock, container: container);
+
+			mock.Expect(service => service.NameDialog(
+				Arg<Window>.Is.Same(expectedParent),
+				Arg<string>.Is.Anything,
+				Arg<string>.Is.Anything,
+				Arg<string>.Is.Anything)).Return(string.Empty);
+
+			//Act
+			Target.Commands.AddSoundBoardCommand.Execute(null);
+
+			//Assert
+			mock.VerifyAllExpectations();
+		}
+
+		[TestMethod]
+		public void AddSoundBoardCommandExecute_NameDialogReturnsNotNull_AddsSoundBoardToSoundBoardsCollection()
+		{
+			//Arrange
+			IDialogService stub = MockRepository.GenerateStub<IDialogService>();
+			const string returnedSoundBoardName = "My new soundboard";
+
+			Target = CreateTarget(dialogService: stub);
+
+			stub.Stub(service => service.NameDialog(null, null, null, null)).IgnoreArguments().Return(returnedSoundBoardName);
+
+			//Act
+			Target.Commands.AddSoundBoardCommand.Execute(null);
+
+			//Assert
+			Target.SoundBoards.Should().Contain(board => board.Name == returnedSoundBoardName);
+		}
+
+		[TestMethod]
+		public void AddSoundBoardCommandExecute_NameDialogReturnsNull_DoesNotAddSoundBoardToSoundBoardsCollection()
+		{
+			//Arrange
+			IDialogService stub = MockRepository.GenerateStub<IDialogService>();
+
+			Target = CreateTarget(dialogService: stub);
+
+			stub.Stub(service => service.NameDialog(null, null, null, null)).IgnoreArguments().Return(null);
+
+			//Act
+			Target.Commands.AddSoundBoardCommand.Execute(null);
+
+			//Assert
+			Target.SoundBoards.Should().BeEmpty();
+		}
+
+		[TestMethod]
+		public void AddSoundBoardCommandExecute_NameDialogReturnsNotNull_AddedSoundBoardIsSelected()
+		{
+			//Arrange
+			const string nameOfNewSoundBoard = "My new sound board";
+
+			IDialogService stub = MockRepository.GenerateStub<IDialogService>();
+			stub.Stub(service => stub.NameDialog(null, null, null, null)).IgnoreArguments().Return(nameOfNewSoundBoard);
+
+			Target = CreateTarget(dialogService: stub);
+
+			//Act
+			Target.Commands.AddSoundBoardCommand.Execute(null);
+
+			//Assert
+			Target.SelectedSoundBoard.Name.Should().Be(nameOfNewSoundBoard);
+		}
+
+		[TestMethod]
+		public void RemoveSoundBoardCommandCanExecute_SelectedSoundBoardIsNull_ReturnsFalse()
+		{
+			Target = CreateTarget();
+
+			Target.Commands.RemoveSoundBoardCommand.CanExecute(null).Should().BeFalse();
+		}
+
+		[TestMethod]
+		public void RemoveSoundBoardCommandCanExecute_SelectedSoundBoardIsNotNull_ReturnsTrue()
+		{
+			Target = CreateTarget();
+
+			Target.SelectedSoundBoard = new SoundBoard();
+
+			Target.Commands.RemoveSoundBoardCommand.CanExecute(null).Should().BeTrue();
+		}
+
+		[TestMethod]
+		public void RemoveSoundBoardCommandExecute__RemovesSelectedSoundBoardFromSoundsBoard()
+		{
+			//Arrange
+			SoundBoard soundBoardToRemove = new SoundBoard();
+
+			Target = CreateTarget();
+			Target.SoundBoards.Add(soundBoardToRemove);
+
+			Target.SelectedSoundBoard = soundBoardToRemove;
+
+			//Act
+			Target.Commands.RemoveSoundBoardCommand.Execute(soundBoardToRemove);
+
+			//Assert
+			Target.SoundBoards.Should().NotContain(soundBoardToRemove);
+		}
+
+
+		[TestMethod]
+		public void ActivateSingleSoundCommand_ParameterIsNull_ThrowsArgumentNullException()
+		{
+			Target = CreateTarget();
+
+			var execute = new Action(() => Target.Commands.ActivateSingleSoundCommand.Execute(null));
+
+			execute.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("parameter");
+		}
+
+		[TestMethod]
+		public void ActivateSingleSoundCommand_ParameterIsNotOfTypeSound_ThrowsArgumentException()
+		{
+			Target = CreateTarget();
+
+			var execute = new Action(() => Target.Commands.ActivateSingleSoundCommand.Execute("Not a sound"));
+
+			execute.ShouldThrow<ArgumentException>()
+				.WithMessage("Parameter must be of type " + typeof (ISound) + "*")
+				.And.ParamName.ShouldBeEquivalentTo("parameter");
+		}
+
+		[TestMethod]
+		public void ActivateSingleSoundCommand_ParameterIsNotNull_AddsCloneOfSoundToActiveSounds()
+		{
+			//Arrange
+			ObservableCollection<ISound> activeSounds = new ObservableCollection<ISound>();
+			IObservableSoundService observableSoundService = CommonStubsFactory.StubObservableSoundService(activeSounds);
+
+			Target = CreateTarget(soundService: observableSoundService);
 			ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
 
 			//Act
 			Target.Commands.ActivateSingleSoundCommand.Execute(sound);
 
-            //Assert
-            Target.SelectedActiveSound.ShouldBeEquivalentTo(sound);
-        }
+			//Assert
+			activeSounds.Should().NotContain(s => ReferenceEquals(s, sound));
+			activeSounds.Single().ShouldBeEquivalentTo(sound);
+		}
+
+		[TestMethod]
+		public void ActivateSingleSoundCommand_SelectedSoundIsNotNull_AddedSoundIsSelected()
+		{
+			//Arrange
+			Target = CreateTarget();
+			ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
+
+			//Act
+			Target.Commands.ActivateSingleSoundCommand.Execute(sound);
+
+			//Assert
+			Target.SelectedActiveSound.ShouldBeEquivalentTo(sound);
+		}
 
 
-        [TestMethod]
-        public void DeactivateSingleSoundCommand_ParameterIsNull_ThrowsArgumentNullException()
-        {
-            Target = CreateTarget();
+		[TestMethod]
+		public void DeactivateSingleSoundCommand_ParameterIsNull_ThrowsArgumentNullException()
+		{
+			Target = CreateTarget();
 
-            var execute = new Action(() => Target.Commands.DeactivateSingleSoundCommand.Execute(null));
+			var execute = new Action(() => Target.Commands.DeactivateSingleSoundCommand.Execute(null));
 
-            execute.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("parameter");
-        }
+			execute.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("parameter");
+		}
 
-        [TestMethod]
-        public void DeactivateSingleSoundCommand_ParameterIsNotOfTypeSound_ThrowsArgumentException()
-        {
-            Target = CreateTarget();
+		[TestMethod]
+		public void DeactivateSingleSoundCommand_ParameterIsNotOfTypeSound_ThrowsArgumentException()
+		{
+			Target = CreateTarget();
 
-            var execute = new Action(() => Target.Commands.DeactivateSingleSoundCommand.Execute("Not a sound"));
+			var execute = new Action(() => Target.Commands.DeactivateSingleSoundCommand.Execute("Not a sound"));
 
-            execute.ShouldThrow<ArgumentException>()
-                .WithMessage("Parameter must be of type " + typeof(ISound) + "*")
-                .And.ParamName.ShouldBeEquivalentTo("parameter");
-        }
+			execute.ShouldThrow<ArgumentException>()
+				.WithMessage("Parameter must be of type " + typeof (ISound) + "*")
+				.And.ParamName.ShouldBeEquivalentTo("parameter");
+		}
 
-        [TestMethod]
-        public void DeactivateSoundCommandExecute_SelectedActiveSoundIsNotNull_RemovesSoundFromActiveSounds()
-        {
-            //Arrange
-            Target = CreateTarget();
-            ISound sound = MockRepository.GenerateStub<ISound>();
-            Target.SoundService.Add(sound);
+		[TestMethod]
+		public void DeactivateSoundCommandExecute_SelectedActiveSoundIsNotNull_RemovesSoundFromActiveSounds()
+		{
+			//Arrange
+			Target = CreateTarget();
+			ISound sound = MockRepository.GenerateStub<ISound>();
+			Target.SoundService.Add(sound);
 
-            //Act
-            Target.Commands.DeactivateSingleSoundCommand.Execute(sound);
+			//Act
+			Target.Commands.DeactivateSingleSoundCommand.Execute(sound);
 
-            //Assert
-            Target.SoundService.ActiveSounds.Should().NotContain(sound);
-        }
+			//Assert
+			Target.SoundService.ActiveSounds.Should().NotContain(sound);
+		}
 
 
-        [TestMethod]
-        public void ToggleSoundIsLoopedCommandExecute_ParameterIsNull_ThrowsArgumentNullException()
-        {
-            Target = CreateTarget();
+		[TestMethod]
+		public void ToggleSoundIsLoopedCommandExecute_ParameterIsNull_ThrowsArgumentNullException()
+		{
+			Target = CreateTarget();
 
-            var actionName = new Action(() => Target.Commands.ToggleSoundIsLoopedCommand.Execute(null));
+			var actionName = new Action(() => Target.Commands.ToggleSoundIsLoopedCommand.Execute(null));
 
-            actionName.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("parameter");
-        }
+			actionName.ShouldThrow<ArgumentNullException>().And.ParamName.ShouldBeEquivalentTo("parameter");
+		}
 
-        [TestMethod]
-        public void ToggleSoundIsLoopedCommandExecute_ParameterIsNotOfTypeSound_ThrowsArgumentException()
-        {
-            Target = CreateTarget();
+		[TestMethod]
+		public void ToggleSoundIsLoopedCommandExecute_ParameterIsNotOfTypeSound_ThrowsArgumentException()
+		{
+			Target = CreateTarget();
 
-            var execute = new Action(() => Target.Commands.ToggleSoundIsLoopedCommand.Execute(string.Empty));
+			var execute = new Action(() => Target.Commands.ToggleSoundIsLoopedCommand.Execute(string.Empty));
 
-            execute.ShouldThrow<ArgumentException>()
-                .WithMessage("Parameter must be of type " + typeof(ISound) + "*")
-                .And.ParamName.ShouldBeEquivalentTo("parameter");
-        }
+			execute.ShouldThrow<ArgumentException>()
+				.WithMessage("Parameter must be of type " + typeof (ISound) + "*")
+				.And.ParamName.ShouldBeEquivalentTo("parameter");
+		}
 
-        [TestMethod]
-        public void ToggleSoundIsLoopedCommandExecute_IsLoopedWasTrue_IsLoopedIsNowFalse()
-        {
+		[TestMethod]
+		public void ToggleSoundIsLoopedCommandExecute_IsLoopedWasTrue_IsLoopedIsNowFalse()
+		{
 			ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
 			sound.IsLooped = true;
-            Target = CreateTarget();
-            
-            Target.Commands.ToggleSoundIsLoopedCommand.Execute(sound);
+			Target = CreateTarget();
 
-            sound.IsLooped.Should().BeFalse();
-        }
+			Target.Commands.ToggleSoundIsLoopedCommand.Execute(sound);
 
-        [TestMethod]
-        public void ToggleSoundIsLoopedCommandExecute_IsLoopedWasFalse_IsLoopedIsNowTrue()
-        {
+			sound.IsLooped.Should().BeFalse();
+		}
+
+		[TestMethod]
+		public void ToggleSoundIsLoopedCommandExecute_IsLoopedWasFalse_IsLoopedIsNowTrue()
+		{
 			ISound sound = CommonStubsFactory.StubClonableSoundWithRandomName();
 			sound.IsLooped = false;
 			Target = CreateTarget();
 
-            Target.Commands.ToggleSoundIsLoopedCommand.Execute(sound);
+			Target.Commands.ToggleSoundIsLoopedCommand.Execute(sound);
 
-            sound.IsLooped.Should().BeTrue();
-        }
+			sound.IsLooped.Should().BeTrue();
+		}
 
-        [TestMethod]
-        public void SaveDataCommandExecute_QuestionDialogResultIsFalse_DoesNotCallSaveSoundBoards()
-        {
-            //Arrange
-            IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-            stub.Stub(service => service.QuestionDialog(null, null, null)).IgnoreArguments().Return(false); 
-            
-            ISoundBoardRepository mock = MockRepository.GenerateMock<ISoundBoardRepository>();
-            mock.Expect(repository => repository.SetSoundBoards(null)).IgnoreArguments()
-                .Repeat.Never(); 
-            
-            Target = CreateTarget(dialogService: stub, soundBoardRepository: mock);
+		[TestMethod]
+		public void SaveDataCommandExecute_QuestionDialogResultIsFalse_DoesNotCallSaveSoundBoards()
+		{
+			//Arrange
+			IDialogService stub = MockRepository.GenerateStub<IDialogService>();
+			stub.Stub(service => service.QuestionDialog(null, null, null)).IgnoreArguments().Return(false);
 
-            //Act
-            Target.Commands.ShutdownAppCommand.Execute(null);
+			ISoundBoardRepository mock = MockRepository.GenerateMock<ISoundBoardRepository>();
+			mock.Expect(repository => repository.SetSoundBoards(null)).IgnoreArguments()
+				.Repeat.Never();
 
-            //Assert
-            mock.VerifyAllExpectations();
-        }
+			Target = CreateTarget(dialogService: stub, soundBoardRepository: mock);
 
-        [TestMethod]
-        public void SaveDataCommandExecute_QuestionDialogResultIsTrue_DoesNotCallSaveSoundBoards()
-        {
-            //Arrange
-            IDialogService stub = MockRepository.GenerateStub<IDialogService>();
-            stub.Stub(service => service.QuestionDialog(null, null, null)).IgnoreArguments().Return(true);
+			//Act
+			Target.Commands.ShutdownAppCommand.Execute(null);
 
-            ISoundBoardRepository mock = MockRepository.GenerateMock<ISoundBoardRepository>();
-            mock.Stub(repository => repository.AreSoundBoardsDifferent(null)).IgnoreArguments().Return(true);
-            mock.Expect(repository => repository.SetSoundBoards(null)).IgnoreArguments()
-                .Repeat.Once();
+			//Assert
+			mock.VerifyAllExpectations();
+		}
 
-            Target = CreateTarget(dialogService: stub, soundBoardRepository: mock);
+		[TestMethod]
+		public void SaveDataCommandExecute_QuestionDialogResultIsTrue_DoesNotCallSaveSoundBoards()
+		{
+			//Arrange
+			IDialogService stub = MockRepository.GenerateStub<IDialogService>();
+			stub.Stub(service => service.QuestionDialog(null, null, null)).IgnoreArguments().Return(true);
 
-            //Act
-            Target.Commands.ShutdownAppCommand.Execute(null);
+			ISoundBoardRepository mock = MockRepository.GenerateMock<ISoundBoardRepository>();
+			mock.Stub(repository => repository.AreSoundBoardsDifferent(null)).IgnoreArguments().Return(true);
+			mock.Expect(repository => repository.SetSoundBoards(null)).IgnoreArguments()
+				.Repeat.Once();
 
-            //Assert
-            mock.VerifyAllExpectations();
-        }
+			Target = CreateTarget(dialogService: stub, soundBoardRepository: mock);
 
-        [TestMethod]
-        public void SaveDataCommandExecute_AreSoundBoardsChangedReturnsTrue_QuestionDialogIsCalled()
-        {
-            //Arrange
-            ISoundBoardRepository stub = MockRepository.GenerateStub<ISoundBoardRepository>();
-            stub.Stub(repository => repository.AreSoundBoardsDifferent(null)).IgnoreArguments().Return(true);
-            
-            IDialogService mock = MockRepository.GenerateMock<IDialogService>();
-            mock.Expect(service => service.QuestionDialog(null, null, null))
-                .IgnoreArguments()
-                .Return(false);
+			//Act
+			Target.Commands.ShutdownAppCommand.Execute(null);
 
-            Target = CreateTarget(dialogService: mock, soundBoardRepository: stub);
+			//Assert
+			mock.VerifyAllExpectations();
+		}
 
-            //Act
-            Target.Commands.ShutdownAppCommand.Execute(null);
+		[TestMethod]
+		public void SaveDataCommandExecute_AreSoundBoardsChangedReturnsTrue_QuestionDialogIsCalled()
+		{
+			//Arrange
+			ISoundBoardRepository stub = MockRepository.GenerateStub<ISoundBoardRepository>();
+			stub.Stub(repository => repository.AreSoundBoardsDifferent(null)).IgnoreArguments().Return(true);
 
-            //Assert
-            mock.VerifyAllExpectations();
-        }
+			IDialogService mock = MockRepository.GenerateMock<IDialogService>();
+			mock.Expect(service => service.QuestionDialog(null, null, null))
+				.IgnoreArguments()
+				.Return(false);
 
-        [TestMethod]
-        public void SaveDataCommandExecute_AreSoundBoardsChangedReturnsFalse_QuestionDialogIsNotCalled()
-        {
-            //Arrange
-            ISoundBoardRepository stub = MockRepository.GenerateStub<ISoundBoardRepository>();
-            stub.Stub(repository => repository.AreSoundBoardsDifferent(null)).IgnoreArguments().Return(false);
+			Target = CreateTarget(dialogService: mock, soundBoardRepository: stub);
 
-            IDialogService mock = MockRepository.GenerateMock<IDialogService>();
-            mock.Expect(service => service.QuestionDialog(null, null, null))
-                .IgnoreArguments()
-                .Return(false)
-                .Repeat.Never();
+			//Act
+			Target.Commands.ShutdownAppCommand.Execute(null);
 
-            Target = CreateTarget(dialogService: mock, soundBoardRepository: stub);
+			//Assert
+			mock.VerifyAllExpectations();
+		}
 
-            //Act
-            Target.Commands.ShutdownAppCommand.Execute(null);
+		[TestMethod]
+		public void SaveDataCommandExecute_AreSoundBoardsChangedReturnsFalse_QuestionDialogIsNotCalled()
+		{
+			//Arrange
+			ISoundBoardRepository stub = MockRepository.GenerateStub<ISoundBoardRepository>();
+			stub.Stub(repository => repository.AreSoundBoardsDifferent(null)).IgnoreArguments().Return(false);
 
-            //Assert
-            mock.VerifyAllExpectations();
-        }
+			IDialogService mock = MockRepository.GenerateMock<IDialogService>();
+			mock.Expect(service => service.QuestionDialog(null, null, null))
+				.IgnoreArguments()
+				.Return(false)
+				.Repeat.Never();
 
-	    private static MainWindowViewModel CreateTarget(ISoundBoardRepository soundBoardRepository = null,
-		    IDialogService dialogService = null, IKernel container = null, IObservableSoundService soundService = null)
-	    {
-		    if (container == null)
-		    {
-			    container = new StandardKernel();
-			    container.Bind<MainWindow>().ToMethod(context => new MainWindow());
-		    }
+			Target = CreateTarget(dialogService: mock, soundBoardRepository: stub);
 
-		    return new MainWindowViewModel(
-			    soundBoardRepository ?? MockRepository.GenerateStub<ISoundBoardRepository>(),
-			    dialogService ?? MockRepository.GenerateStub<IDialogService>(),
-			    soundService ?? CommonStubsFactory.StubObservableSoundService(),
-			    container,
-			    CommonStubsFactory.StubSoundFactory());
-	    }
+			//Act
+			Target.Commands.ShutdownAppCommand.Execute(null);
+
+			//Assert
+			mock.VerifyAllExpectations();
+		}
+
+		private static MainWindowViewModel CreateTarget(ISoundBoardRepository soundBoardRepository = null,
+			IDialogService dialogService = null, IKernel container = null, IObservableSoundService soundService = null)
+		{
+			if (container == null)
+			{
+				container = new StandardKernel();
+				container.Bind<MainWindow>().ToMethod(context => new MainWindow());
+			}
+
+			return new MainWindowViewModel(
+				soundBoardRepository ?? MockRepository.GenerateStub<ISoundBoardRepository>(),
+				dialogService ?? MockRepository.GenerateStub<IDialogService>(),
+				soundService ?? CommonStubsFactory.StubObservableSoundService(),
+				container,
+				CommonStubsFactory.StubSoundFactory());
+		}
 	}
 }
