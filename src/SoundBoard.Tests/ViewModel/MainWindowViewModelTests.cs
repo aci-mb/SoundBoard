@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using FluentAssertions;
+using GongSolutions.Wpf.DragDrop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ninject;
 using Rhino.Mocks;
 using SoundBoard.Model;
 using SoundBoard.Services;
+using SoundBoard.Services.SoundImplementation;
 using SoundBoard.View;
 using SoundBoard.ViewModel;
 
@@ -35,6 +38,38 @@ namespace SoundBoard.Tests.ViewModel
 			Target.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
 
 			Target.Commands.AddSoundCommand.CanExecute(null).Should().BeTrue();
+		}
+
+		[TestMethod]
+		public void AddSoundCommandExecute__CallsDialogServiceOpenFileDialogWithCorrectArguments()
+		{
+			//Arrange
+			IDialogService dialogServiceMock = MockRepository.GenerateMock<IDialogService>();
+
+			string[] supportedExtensions = { "*.a", "*.b", "*.c"};
+
+			Dictionary<string, string> expectedFilters = new Dictionary<string, string>
+			{
+				{
+					Properties.Resources.MainWindowViewModel_AddSounds_Supported_Files,
+					string.Join(Properties.Resources.MainWindowViewModel_AddSounds__Supported_Files_Separator, supportedExtensions)
+				}
+			};
+
+			Target = CreateTarget(dialogService: dialogServiceMock, soundFactory: CommonStubsFactory.StubSoundFactory(supportedExtensions));
+			Target.SelectedSoundBoard = new SoundBoard.Model.SoundBoard();
+
+			dialogServiceMock.Expect(
+				service =>
+					service.OpenFileDialog(Properties.Resources.MainWindowViewModel_AddSounds_Choose_sound_files_to_add,
+						expectedFilters))
+				.Return(Enumerable.Empty<string>());
+
+			//Act
+			Target.Commands.AddSoundCommand.Execute(null);
+
+			//Assert
+			dialogServiceMock.VerifyAllExpectations();
 		}
 
 		[TestMethod]
@@ -471,8 +506,201 @@ namespace SoundBoard.Tests.ViewModel
 			mock.VerifyAllExpectations();
 		}
 
+		[TestMethod]
+		public void DragOver__SetsEffectsToCopy()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.All;
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.Copy);
+		}
+
+		[TestMethod]
+		public void Drop_DataIsASingleISound_AddsSoundToTargetCollection()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>();
+			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSound);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.Single().ShouldBeEquivalentTo(droppedSound);
+		}
+
+		[TestMethod]
+		public void Drop_TargetCollectionIsActiveSoundsAndDataIsASingleISound_AddsSoundToSoundService()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ICollection<ISound> targetCollection = Target.SoundService.ActiveSounds;
+			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSound);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.Single().ShouldBeEquivalentTo(droppedSound);
+		}
+
+		[TestMethod]
+		public void Drop_DataIsAnEnumerableOfISounds_AddsAllSoundsToTargetCollection()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>();
+			IEnumerable<ISound> droppedSounds = new ISound[]
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName()
+			};
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSounds);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.ShouldBeEquivalentTo(droppedSounds);
+		}
+
+		[TestMethod]
+		public void Drop_TargetCollectionIsActiveSoundsDataIsAnEnumerableOfISounds_AddsAllSoundsToSoundService()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ICollection<ISound> targetCollection = Target.SoundService.ActiveSounds;
+			IEnumerable<ISound> droppedSounds = new ISound[]
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName()
+			};
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSounds);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.ShouldBeEquivalentTo(droppedSounds);
+		}
+
+		[TestMethod]
+		public void Drop_DataIsADataObjectContainingMultipleFiles_AddsASoundForEachSupportedFileToTargetCollection()
+		{
+			//Arrange
+			ISoundFactory soundFactory = CommonStubsFactory.StubSoundFactory(new string[]
+			{
+				"*.mp3",
+				"*.m4a",
+				"*.ogg"
+			});
+			Target = CreateTarget(soundFactory: soundFactory);
+
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>();
+			DataObject droppeDataObject = new DataObject();
+
+			string[] supportedFiles =
+			{
+				"Taking the hobbits to isengard.mp3",
+				"The way i tend to be.m4a",
+				"-Human.ogg"
+			};
+
+			StringCollection fileDropList = new StringCollection
+			{
+				"Unsupported File.wav",
+				"Unsupported File2.agg",
+				"Unsupported File2.bleurrg",
+				"Unsupported File2.idk"
+			};
+			fileDropList.AddRange(supportedFiles);
+			droppeDataObject.SetFileDropList(fileDropList);
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppeDataObject);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.Should().OnlyContain(sound => supportedFiles.Any(s => s == sound.FileName));
+		}
+
+		[TestMethod]
+		public void Drop_TargetCollectionIsActiveSoundsDataIsADataObjectContainingMultipleFiles_AddsASoundForEachSupportedFileToSoundService()
+		{
+			//Arrange
+			ISoundFactory soundFactory = CommonStubsFactory.StubSoundFactory(new string[]
+			{
+				"*.mp3",
+				"*.m4a",
+				"*.ogg"
+			});
+			Target = CreateTarget(soundFactory: soundFactory);
+
+			ICollection<ISound> targetCollection = Target.SoundService.ActiveSounds;
+			DataObject droppeDataObject = new DataObject();
+
+			string[] supportedFiles =
+			{
+				"Taking the hobbits to isengard.mp3",
+				"The way i tend to be.m4a",
+				"-Human.ogg"
+			};
+
+			StringCollection fileDropList = new StringCollection
+			{
+				"Unsupported File.wav",
+				"Unsupported File2.agg",
+				"Unsupported File2.bleurrg",
+				"Unsupported File2.idk"
+			};
+			fileDropList.AddRange(supportedFiles);
+			droppeDataObject.SetFileDropList(fileDropList);
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppeDataObject);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.Should().OnlyContain(sound => supportedFiles.Any(s => s == sound.FileName));
+		}
+
 		private static MainWindowViewModel CreateTarget(ISoundBoardRepository soundBoardRepository = null,
-			IDialogService dialogService = null, IKernel container = null, IObservableSoundService soundService = null)
+			IDialogService dialogService = null, IKernel container = null, IObservableSoundService soundService = null,
+			ISoundFactory soundFactory = null)
 		{
 			if (container == null)
 			{
@@ -485,7 +713,7 @@ namespace SoundBoard.Tests.ViewModel
 				dialogService ?? MockRepository.GenerateStub<IDialogService>(),
 				soundService ?? CommonStubsFactory.StubObservableSoundService(),
 				container,
-				CommonStubsFactory.StubSoundFactory());
+				soundFactory ?? CommonStubsFactory.StubSoundFactory(new string[] { "*.a", "*.b"}));
 		}
 	}
 }

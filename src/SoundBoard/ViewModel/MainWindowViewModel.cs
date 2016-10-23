@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -118,54 +119,16 @@ namespace SoundBoard.ViewModel
             _soundBoardRepository.SetSoundBoards(SoundBoards);
         }
 
-        private static Dictionary<string, string> GetFilters()
-        {
-	        return new Dictionary<string, string>
-	        {
-		        {
-			        Resources.MainWindowViewModel_AddSounds_Supported_Files,
-			        string.Join(Resources.MainWindowViewModel_AddSounds__Supported_Files_Separator,
-				        Resources.MainWindowViewModel_AddSounds___wav, Resources.MainWindowViewModel_AddSounds___ogg,
-				        Resources.MainWindowViewModel_AddSounds___mp3, Resources.MainWindowViewModel_AddSounds___flac,
-				        Resources.MainWindowViewModel_AddSounds___mod, Resources.MainWindowViewModel_AddSounds___it,
-				        Resources.MainWindowViewModel_AddSounds___s3d, Resources.MainWindowViewModel_AddSounds___xm)
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_RIFF_WAVE,
-			        Resources.MainWindowViewModel_AddSounds___wav
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_Ogg_Vorbis,
-			        Resources.MainWindowViewModel_AddSounds___ogg
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_MPEG_1_Audio_Layer_3,
-			        Resources.MainWindowViewModel_AddSounds___mp3
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_Free_Lossless_Audio_Codec,
-			        Resources.MainWindowViewModel_AddSounds___flac
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_Amiga_Modules,
-			        Resources.MainWindowViewModel_AddSounds___mod
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_Impulse_Tracker,
-			        Resources.MainWindowViewModel_AddSounds___it
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_Scream_Tracker_3,
-			        Resources.MainWindowViewModel_AddSounds___s3d
-		        },
-		        {
-			        Resources.MainWindowViewModel_AddSounds_Fast_Tracker_2,
-			        Resources.MainWindowViewModel_AddSounds___xm
-		        },
-	        };
-        }
+	    private Dictionary<string, string> Filters => new Dictionary<string, string>
+	    {
+		    {
+			    Resources.MainWindowViewModel_AddSounds_Supported_Files,
+			    string.Join(Resources.MainWindowViewModel_AddSounds__Supported_Files_Separator,
+				    _soundFactory.SupportedExtensions)
+		    }
+	    };
 
-        private static ISoundBoardRepository CreateSoundBoardRepository(ISoundFactory soundFactory)
+	    private static ISoundBoardRepository CreateSoundBoardRepository(ISoundFactory soundFactory)
         {
             return IsInDesignMode
                 ? (ISoundBoardRepository) new DesignModeSoundBoardRepository()
@@ -318,9 +281,9 @@ namespace SoundBoard.ViewModel
 
             private void AddSounds()
             {
-                var filesToAdd = _viewModel._dialogService.OpenFileDialog(
+                IEnumerable<string> filesToAdd = _viewModel._dialogService.OpenFileDialog(
                     Resources.MainWindowViewModel_AddSounds_Choose_sound_files_to_add,
-                    GetFilters());
+                    _viewModel.Filters);
 
                 foreach (string fileToAdd in filesToAdd)
                 {
@@ -339,7 +302,7 @@ namespace SoundBoard.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            ObservableCollection<ISound> targetCollection = dropInfo.TargetCollection as ObservableCollection<ISound>;
+            ICollection<ISound> targetCollection = dropInfo.TargetCollection as ICollection<ISound>;
             if (targetCollection == null)
             {
                 return;
@@ -369,7 +332,14 @@ namespace SoundBoard.ViewModel
         {
             foreach (ISound sound in sounds)
             {
-                targetCollection.Add(sound.Clone() as ISound);
+	            if (ReferenceEquals(targetCollection, SoundService.ActiveSounds))
+	            {
+		            SoundService.Add(sound.Clone() as ISound);
+	            }
+				else
+				{
+					targetCollection.Add(sound.Clone() as ISound); 
+				}
             }
         }
 
@@ -379,12 +349,20 @@ namespace SoundBoard.ViewModel
             {
                 foreach (string fileName in dataObject.GetFileDropList())
                 {
-                    //if (GetFilters().ContainsValue("*" + Path.GetExtension(fileName)))
+                    if (_soundFactory.SupportedExtensions.Contains("*" + Path.GetExtension(fileName), StringComparer.OrdinalIgnoreCase))
 	                {
 		                ISound sound = _soundFactory.Create();
 	                    sound.FileName = fileName;
-	                    targetCollection.Add(sound);
-                    }
+
+						if (ReferenceEquals(targetCollection, SoundService.ActiveSounds))
+						{
+							SoundService.Add(sound);
+						}
+						else
+						{
+							targetCollection.Add(sound);
+						}
+					}
                 }
             }
         }

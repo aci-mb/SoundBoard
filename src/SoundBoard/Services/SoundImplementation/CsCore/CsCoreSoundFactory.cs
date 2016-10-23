@@ -21,14 +21,15 @@ namespace SoundBoard.Services.SoundImplementation.CsCore
 		}
 
 		/// <summary>
-		/// Gets all supported extensions in the format of "*.extension", e. g. "*.mp3"
+		/// All supported extensions in the format of "*.extension".
+		/// E. g. "*.mp3"
 		/// </summary>
 		public string[] SupportedExtensions
 			=> new string[]
 			{
-				"*.mp3", "*.mpeg3", "*.wav", "*.wave", "*.flac", "*.fla", "*.aiff", "*.aif", "*.aifc", "*.aac", "*.adt", "*.adts",
-				"*.m2ts", "*.mp2", "*.3g2", "*.3gp2", "*.3gp", "*.3gpp", "*.m4a", "*.m4v", "*.mp4v", "*.mp4", "*.mov", "*.asf",
-				"*.wm", "*.wmv", "*.wma", "*.ogg"
+				"*.3g2", "*.3gp", "*.3gp2", "*.3gpp", "*.aac", "*.adt", "*.adts", "*.aif", "*.aifc", "*.aiff", "*.asf", "*.fla",
+				"*.flac", "*.m2ts", "*.m4a", "*.m4v", "*.mov", "*.mp2", "*.mp3", "*.mp4", "*.mp4v", "*.mpeg3", "*.ogg",
+				"*.wav", "*.wave", "*.wm", "*.wma", "*.wmv",
 			};
 	}
 }

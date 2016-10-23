@@ -11,7 +11,8 @@ namespace SoundBoard.Services.SoundImplementation
 		ISound Create();
 
 		/// <summary>
-		/// Gets all supported extensions in the format of "*.extension", e. g. "*.mp3"
+		/// All supported extensions in the format of "*.extension".
+		/// E. g. "*.mp3"
 		/// </summary>
 		string[] SupportedExtensions { get; }
 	}

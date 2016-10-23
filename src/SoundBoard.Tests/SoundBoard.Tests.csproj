@@ -50,9 +50,6 @@
     <Reference Include="GongSolutions.Wpf.DragDrop">
       <HintPath>..\packages\gong-wpf-dragdrop.0.1.4.3\lib\net40\GongSolutions.Wpf.DragDrop.dll</HintPath>
     </Reference>
-    <Reference Include="irrKlang.NET4">
-      <HintPath>..\..\ThirdParty\IrrKlang.net\x86\irrKlang.NET4.dll</HintPath>
-    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
@@ -88,6 +85,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\DialogViewModelTests.cs" />
+    <Compile Include="Services\SoundImplementation\CsCore\CsCoreSoundFactoryTests.cs" />
     <Compile Include="ViewModel\ContainerConfiguratorTests.cs" />
     <Compile Include="ViewModel\Converters\BooleanToOpacityConverterTests.cs" />
     <Compile Include="ViewModel\Converters\TimeSpanToVisibilityConverterTests.cs" />

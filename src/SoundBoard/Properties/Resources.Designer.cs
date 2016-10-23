@@ -206,78 +206,6 @@ namespace SoundBoard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to *.flac.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___flac {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___flac", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to *.it.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___it {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___it", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to *.mod.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___mod {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___mod", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to *.mp3.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___mp3 {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___mp3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to *.ogg.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___ogg {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___ogg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to *.s3d.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___s3d {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___s3d", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to *.wav.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___wav {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___wav", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to *.xm.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds___xm {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds___xm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to ;.
         /// </summary>
         public static string MainWindowViewModel_AddSounds__Supported_Files_Separator {
@@ -287,83 +215,11 @@ namespace SoundBoard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Amiga Modules.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_Amiga_Modules {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_Amiga_Modules", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Choose sound files to add.
         /// </summary>
         public static string MainWindowViewModel_AddSounds_Choose_sound_files_to_add {
             get {
                 return ResourceManager.GetString("MainWindowViewModel_AddSounds_Choose_sound_files_to_add", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Fast Tracker 2.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_Fast_Tracker_2 {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_Fast_Tracker_2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Free Lossless Audio Codec.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_Free_Lossless_Audio_Codec {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_Free_Lossless_Audio_Codec", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Impulse Tracker.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_Impulse_Tracker {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_Impulse_Tracker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MPEG-1 Audio Layer 3.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_MPEG_1_Audio_Layer_3 {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_MPEG_1_Audio_Layer_3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ogg Vorbis.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_Ogg_Vorbis {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_Ogg_Vorbis", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to RIFF WAVE.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_RIFF_WAVE {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_RIFF_WAVE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Scream Tracker 3.
-        /// </summary>
-        public static string MainWindowViewModel_AddSounds_Scream_Tracker_3 {
-            get {
-                return ResourceManager.GetString("MainWindowViewModel_AddSounds_Scream_Tracker_3", resourceCulture);
             }
         }
         
