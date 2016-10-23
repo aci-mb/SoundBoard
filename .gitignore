@@ -2,12 +2,15 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/src/packages
-/src/SoundBoard/bin/Debug
-/src/SoundBoard/obj/Debug
 *.DotSettings.user
-*csproj.user
+*.csproj.user
+*.crunchsolution.cache
 *.ncrunchproject
-/src/SoundBoard.Tests/bin/Debug
-/src/SoundBoard.Tests/obj/Debug
+*.ncrunchsolution.user
 *.ncrunchsolution
+*.suo
+/src/packages
+/src/SoundBoard/obj
+/src/SoundBoard.Tests/obj
+/src/SoundBoard/bin
+/src/SoundBoard.Tests/bin
