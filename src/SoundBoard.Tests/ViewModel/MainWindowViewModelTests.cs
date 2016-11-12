@@ -422,6 +422,7 @@ namespace SoundBoard.Tests.ViewModel
 			sound.IsLooped.Should().BeTrue();
 		}
 
+
 		[TestMethod]
 		public void SaveDataCommandExecute_QuestionDialogResultIsFalse_DoesNotCallSaveSoundBoards()
 		{
@@ -506,14 +507,52 @@ namespace SoundBoard.Tests.ViewModel
 			mock.VerifyAllExpectations();
 		}
 
+
 		[TestMethod]
-		public void DragOver__SetsEffectsToCopy()
+		public void DragOver__SetsDropTargetAdornerToInsert()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.DropTargetAdorner = typeof (int);
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.DropTargetAdorner.ShouldBeEquivalentTo(DropTargetAdorners.Insert);
+		}
+
+		[TestMethod]
+		public void DragOver_TargetCollectionIsNull_SetsEffectsToNone()
 		{
 			//Arrange
 			Target = CreateTarget();
 
 			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
 			dropInfo.Effects = DragDropEffects.All;
+			dropInfo.Stub(info => info.Data).Return(CommonStubsFactory.StubClonableSoundWithRandomName());
+			dropInfo.Stub(info => info.TargetCollection).Return(null);
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.None);
+		}
+
+		[TestMethod]
+		public void DragOver_DataIsASingleSoundAndTargetCollectionDoesNotContainSound_SetsEffectsToCopy()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>();
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSound);
 
 			//Act
 			Target.DragOver(dropInfo);
@@ -523,15 +562,192 @@ namespace SoundBoard.Tests.ViewModel
 		}
 
 		[TestMethod]
-		public void Drop_DataIsASingleISound_AddsSoundToTargetCollection()
+		public void DragOver_DataIsASingleSoundAndTargetCollectionContainsSound_SetsEffectsToMove()
 		{
 			//Arrange
 			Target = CreateTarget();
 
+			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>
+			{
+				droppedSound
+			};
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSound);
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.Move);
+		}
+
+		[TestMethod]
+		public void DragOver_DataIsASingleSoundAndTargetCollectionContainsSoundAndIsReadOnly_SetsEffectsToNone()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
+			ReadOnlyObservableCollection<ISound> targetCollection =
+				new ReadOnlyObservableCollection<ISound>(new ObservableCollection<ISound>
+				{
+					droppedSound
+				});
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSound);
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.None);
+		}
+
+		[TestMethod]
+		public void DragOver_DataIsAnEnumerableOfISoundsAndTargetCollectionDoesNotContainThoseSounds_SetsEffectsToCopy()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			IEnumerable<ISound> droppedSounds = new ISound[]
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName()
+			};
 			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>();
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSounds);
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.Copy);
+		}
+
+		[TestMethod]
+		public void DragOver_DataIsAnEnumerableOfISoundsAndTargetCollectionContainsThoseSounds_SetsEffectsToMove()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			IEnumerable<ISound> droppedSounds = new ISound[]
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName()
+			};
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>(droppedSounds);
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSounds);
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.Move);
+		}
+
+		[TestMethod]
+		public void DragOver_DataIsAnEnumerableOfISoundsAndTargetCollectionContainsThoseSoundsAndIsReadOnly_SetsEffectsToNone()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			IEnumerable<ISound> droppedSounds = new ISound[]
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName()
+			};
+			ReadOnlyObservableCollection<ISound> targetCollection =
+				new ReadOnlyObservableCollection<ISound>(
+					new ObservableCollection<ISound>(droppedSounds));
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSounds);
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.None);
+		}
+
+		[TestMethod]
+		public void DragOver_DataIsADataObject_SetsEffectsToCopy()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Stub(info => info.TargetCollection).Return(new ObservableCollection<ISound>());
+			dropInfo.Stub(info => info.Data).Return(new DataObject());
+
+			//Act
+			Target.DragOver(dropInfo);
+
+			//Assert
+			dropInfo.Effects.ShouldBeEquivalentTo(DragDropEffects.Copy);
+		}
+
+
+		[TestMethod]
+		public void Drop_EffectIsCopyAndDataIsASingleISound_InsertsSoundIntoTargetCollection()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+			};
+
+			ISound[] expectedCollection =
+			{
+				targetCollection[0],
+				droppedSound,
+				targetCollection[1],
+				targetCollection[2],
+			};
+
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Copy;
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSound);
+			dropInfo.Stub(info => info.InsertIndex).Return(1);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.ShouldBeEquivalentTo(expectedCollection);
+		}
+
+		[TestMethod]
+		public void Drop_EffectIsCopyAndTargetCollectionIsActiveSoundsAndDataIsASingleISound_AddsSoundToSoundService()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ICollection<ISound> targetCollection = Target.SoundService.ActiveSounds;
 			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
 
 			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Copy;
 			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
 			dropInfo.Stub(info => info.Data).Return(droppedSound);
 
@@ -543,52 +759,50 @@ namespace SoundBoard.Tests.ViewModel
 		}
 
 		[TestMethod]
-		public void Drop_TargetCollectionIsActiveSoundsAndDataIsASingleISound_AddsSoundToSoundService()
+		public void Drop_EffectIsCopyAndDataIsAnEnumerableOfISounds_InsertsAllSoundsIntoTargetCollection()
 		{
 			//Arrange
 			Target = CreateTarget();
 
-			ICollection<ISound> targetCollection = Target.SoundService.ActiveSounds;
-			ISound droppedSound = CommonStubsFactory.StubClonableSoundWithRandomName();
-
-			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
-			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
-			dropInfo.Stub(info => info.Data).Return(droppedSound);
-
-			//Act
-			Target.Drop(dropInfo);
-
-			//Assert
-			targetCollection.Single().ShouldBeEquivalentTo(droppedSound);
-		}
-
-		[TestMethod]
-		public void Drop_DataIsAnEnumerableOfISounds_AddsAllSoundsToTargetCollection()
-		{
-			//Arrange
-			Target = CreateTarget();
-
-			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>();
-			IEnumerable<ISound> droppedSounds = new ISound[]
+			ISound[] droppedSounds = new ISound[]
 			{
 				CommonStubsFactory.StubClonableSoundWithRandomName(),
 				CommonStubsFactory.StubClonableSoundWithRandomName(),
 				CommonStubsFactory.StubClonableSoundWithRandomName()
 			};
 
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+			};
+
+			ISound[] expectedCollection =
+			{
+				targetCollection[0],
+				droppedSounds[0],
+				droppedSounds[1],
+				droppedSounds[2],
+				targetCollection[1],
+				targetCollection[2],
+			};
+
 			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Copy;
 			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
 			dropInfo.Stub(info => info.Data).Return(droppedSounds);
+			dropInfo.Stub(info => info.InsertIndex).Return(1);
 
 			//Act
 			Target.Drop(dropInfo);
 
 			//Assert
-			targetCollection.ShouldBeEquivalentTo(droppedSounds);
+			targetCollection.ShouldBeEquivalentTo(expectedCollection);
 		}
 
 		[TestMethod]
-		public void Drop_TargetCollectionIsActiveSoundsDataIsAnEnumerableOfISounds_AddsAllSoundsToSoundService()
+		public void Drop_EffectIsCopyAndTargetCollectionIsActiveSoundsAndDataIsAnEnumerableOfISounds_AddsAllSoundsToSoundService()
 		{
 			//Arrange
 			Target = CreateTarget();
@@ -602,6 +816,7 @@ namespace SoundBoard.Tests.ViewModel
 			};
 
 			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Copy;
 			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
 			dropInfo.Stub(info => info.Data).Return(droppedSounds);
 
@@ -613,7 +828,7 @@ namespace SoundBoard.Tests.ViewModel
 		}
 
 		[TestMethod]
-		public void Drop_DataIsADataObjectContainingMultipleFiles_AddsASoundForEachSupportedFileToTargetCollection()
+		public void Drop_EffectIsCopyAndDataIsADataObjectContainingMultipleFiles_AddsASoundForEachSupportedFileToTargetCollection()
 		{
 			//Arrange
 			ISoundFactory soundFactory = CommonStubsFactory.StubSoundFactory(new string[]
@@ -645,6 +860,7 @@ namespace SoundBoard.Tests.ViewModel
 			droppeDataObject.SetFileDropList(fileDropList);
 
 			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Copy;
 			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
 			dropInfo.Stub(info => info.Data).Return(droppeDataObject);
 
@@ -656,7 +872,7 @@ namespace SoundBoard.Tests.ViewModel
 		}
 
 		[TestMethod]
-		public void Drop_TargetCollectionIsActiveSoundsDataIsADataObjectContainingMultipleFiles_AddsASoundForEachSupportedFileToSoundService()
+		public void Drop_EffectIsCopyAndTargetCollectionIsActiveSoundsDataIsADataObjectContainingMultipleFiles_AddsASoundForEachSupportedFileToSoundService()
 		{
 			//Arrange
 			ISoundFactory soundFactory = CommonStubsFactory.StubSoundFactory(new string[]
@@ -688,6 +904,7 @@ namespace SoundBoard.Tests.ViewModel
 			droppeDataObject.SetFileDropList(fileDropList);
 
 			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Copy;
 			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
 			dropInfo.Stub(info => info.Data).Return(droppeDataObject);
 
@@ -696,6 +913,89 @@ namespace SoundBoard.Tests.ViewModel
 
 			//Assert
 			targetCollection.Should().OnlyContain(sound => supportedFiles.Any(s => s == sound.FileName));
+		}
+
+
+		[TestMethod]
+		public void Drop_EffectIsMoveAndDataIsASingleISound_MovesSoundToCorrectPosition()
+		{
+			//Arrange
+			const int moveTargetIndex = 2;
+			Target = CreateTarget();
+
+			ISound movedSound = CommonStubsFactory.StubClonableSound("Index2");
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				movedSound,
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName()
+			};
+
+			IEnumerable<ISound> expectedCollection = new ObservableCollection<ISound>
+			{
+				targetCollection[0],
+				targetCollection[2],
+				movedSound, // index 2
+				targetCollection[3]
+			};
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Move;
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(movedSound);
+			dropInfo.Stub(info => info.InsertIndex).Return(moveTargetIndex);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.ShouldBeEquivalentTo(expectedCollection);
+		}
+
+		[TestMethod]
+		public void Drop_EffectIsMoveAndDataIsAnEnumerableOfISounds_MovesAllSoundsToCorrectPositionInExistingOrder()
+		{
+			//Arrange
+			Target = CreateTarget();
+
+			ISound[] droppedSounds = {
+				CommonStubsFactory.StubClonableSound("FirstMovedSound"),
+				CommonStubsFactory.StubClonableSound("SecondMovedSound"),
+				CommonStubsFactory.StubClonableSound("ThirdMovedSound"),
+			};
+
+			ObservableCollection<ISound> targetCollection = new ObservableCollection<ISound>
+			{
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				CommonStubsFactory.StubClonableSoundWithRandomName(),
+				droppedSounds[0],
+				droppedSounds[1],
+				droppedSounds[2],
+			};
+
+			ISound[] expectedCollection =
+			{
+				targetCollection[0],
+				droppedSounds[0],
+				droppedSounds[1],
+				droppedSounds[2],
+				targetCollection[1],
+				targetCollection[2]
+			};
+
+			IDropInfo dropInfo = MockRepository.GenerateStub<IDropInfo>();
+			dropInfo.Effects = DragDropEffects.Move;
+			dropInfo.Stub(info => info.TargetCollection).Return(targetCollection);
+			dropInfo.Stub(info => info.Data).Return(droppedSounds);
+			dropInfo.Stub(info => info.InsertIndex).Return(1);
+
+			//Act
+			Target.Drop(dropInfo);
+
+			//Assert
+			targetCollection.ShouldBeEquivalentTo(expectedCollection, options => options.WithStrictOrdering());
 		}
 
 		private static MainWindowViewModel CreateTarget(ISoundBoardRepository soundBoardRepository = null,
