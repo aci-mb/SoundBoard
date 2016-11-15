@@ -243,6 +243,23 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)*.xml
+del $(TargetDir)*.pdb
+rd /S /Q $(TargetDir)en
+rd /S /Q $(TargetDir)es
+rd /S /Q $(TargetDir)fr
+rd /S /Q $(TargetDir)hu
+rd /S /Q $(TargetDir)it
+rd /S /Q $(TargetDir)ja
+rd /S /Q $(TargetDir)ko
+rd /S /Q $(TargetDir)pt-BR
+rd /S /Q $(TargetDir)ro
+rd /S /Q $(TargetDir)ru
+rd /S /Q $(TargetDir)sv
+rd /S /Q $(TargetDir)zh-Hans
+rd /S /Q $(TargetDir)zh-Hant</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
