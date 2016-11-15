@@ -4,15 +4,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:Converters="clr-namespace:SoundBoard.ViewModel.Converters"
+    xmlns:converters="clr-namespace:SoundBoard.ViewModel.Converters"
 	xmlns:helpers="clr-namespace:SoundBoard.Helpers"
-	xmlns:p="clr-namespace:SoundBoard.Properties"
 	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
 	xmlns:viewModel="clr-namespace:SoundBoard.ViewModel"
     xmlns:resx="clr-namespace:SoundBoard.Properties"
-    xmlns:System="clr-namespace:System;assembly=mscorlib"
-    x:Name="window"
+	x:Name="window"
     mc:Ignorable="d" x:Class="SoundBoard.View.MainWindow"
 	Title="Acillatem Sound Board"
 	Height="450.042"
@@ -29,9 +27,8 @@
 			</Style>
 			<helpers:DoubleToGridLengthConverter x:Key="DoubleToGridLengthConverter"/>
             <viewModel:MainWindowViewModel x:Key="MainWindowViewModelDataSource" d:IsDataSource="True"/>
-            <Converters:TimeSpanToVisibilityConverter x:Key="TimeSpanToVisibilityConverter"/>
+            <converters:TimeSpanToVisibilityConverter x:Key="TimeSpanToVisibilityConverter"/>
         	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        	<Converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
             <DataTemplate x:Key="SoundBoardTemplate">
             	<StackPanel>
             		<TextBlock Text="{Binding Name}" />
@@ -57,7 +54,7 @@
             <DataTemplate x:Key="ActiveSoundColumnNameTemplate">
                 <DockPanel>
                     <Image Source="appbar.clock.png" Height="17" Width="17"  Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" />
-					<Label x:Name="Delay" Grid.Column="1" Content="{Binding Delay.TotalSeconds}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,0" ContentStringFormat="s" />
+					<Label x:Name="Delay" Content="{Binding Delay.TotalSeconds}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,0" ContentStringFormat="s" />
                     <Label x:Name="textBlock" Content="{Binding Name}" ToolTip="{Binding FileName}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
@@ -67,8 +64,7 @@
                     </Label>
                 </DockPanel>
             </DataTemplate>
-            <System:Double x:Key="IsLoopedColumnWidth">NaN</System:Double>
-			<DataTemplate x:Key="SoundColumnIsLoopedTemplate">
+	        <DataTemplate x:Key="SoundColumnIsLoopedTemplate">
 				<CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsLooped, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 			</DataTemplate>
 
@@ -82,56 +78,7 @@
 			<DataTemplate x:Key="SoundColumnDelayTemplate">
                 <xctk:DoubleUpDown Minimum="0" Value="{Binding Delay, Converter={StaticResource TimeSpanToDoubleSecondsConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsManipulationEnabled="True" ParsingNumberStyle="AllowDecimalPoint" Background="Transparent" BorderBrush="{DynamicResource NormalBorderBrush}" Foreground="{DynamicResource TextBrush}"/>
 			</DataTemplate>
-			<DataTemplate x:Key="ActiveSoundTemplate">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="250" />
-						<ColumnDefinition Width="100" />
-						<ColumnDefinition Width="100" />
-					</Grid.ColumnDefinitions>
-					<Image Height="24" Width="24" Source="appbar.clock.png" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}">
-						<Image.Effect>
-							<DropShadowEffect/>
-						</Image.Effect>
-					</Image>
-					<Label x:Name="Delay" Grid.Column="1" Content="{Binding Delay}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,0" />
-					<Label x:Name="Name" Content="{Binding Name}" ToolTip="{Binding FileName}" VerticalAlignment="Center" Focusable="True" Grid.Column="2" >
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="MouseDoubleClick">
-								<i:InvokeCommandAction Command="{Binding Commands.DeactivateSingleSoundCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=Name}"/>
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</Label>
-					<Image x:Name="IsLooped" Height="24" Width="24" Grid.Column="3" OpacityMask="Black" Source="appbar.loop.png">
-						<Image.Style>
-							<Style>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding IsLooped}" Value="True">
-										<Setter Property="UIElement.Effect">
-											<Setter.Value>
-												<DropShadowEffect Color="Blue" ShadowDepth="0" />
-											</Setter.Value>
-										</Setter>
-									</DataTrigger>
-									
-								</Style.Triggers>
-							</Style>
-						</Image.Style>
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="MouseLeftButtonUp">
-								<i:InvokeCommandAction Command="{Binding Commands.ToggleSoundIsLoopedCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=IsLooped}"/>
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</Image>
-					<Slider x:Name="Volume"
-						Value="{Binding VolumeInPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-						AutoToolTipPlacement="BottomRight" Maximum="100" LargeChange="10" SmallChange="1"
-						Grid.Column="4" VerticalAlignment="Center" ToolTip="Volume" />
-				</Grid>
-            </DataTemplate>
-            <helpers:ListViewStretchedColumnWidthConverter x:Key="ListViewActualWidthToRemainingColumnWidthConverter" />
+	        <helpers:ListViewStretchedColumnWidthConverter x:Key="ListViewActualWidthToRemainingColumnWidthConverter" />
         </ResourceDictionary>
     </Window.Resources>
 	<i:Interaction.Triggers>
