@@ -73,18 +73,26 @@ namespace SoundBoard.Services
 
         private bool AreBoardsEqual(Model.SoundBoard board, Model.SoundBoard otherBoard)
         {
-            return board.Name == otherBoard.Name
-                   && board.Sounds.Count == otherBoard.Sounds.Count
-                   && board.Sounds.All(otherSound => otherBoard.Sounds.Any(sound => AreSoundsEqual(sound, otherSound)));
+	        return board.Name == otherBoard.Name
+	               && board.Sounds.Count == otherBoard.Sounds.Count
+	               && board.Sounds.SequenceEqual(otherBoard.Sounds, new SoundEqualityComparer());
         }
 
-        private bool AreSoundsEqual(ISound sound, ISound otherSound)
-        {
-            return sound.IsLooped == otherSound.IsLooped
-                   && sound.FileName == otherSound.FileName
-                   && sound.Name == otherSound.Name
-                   && sound.VolumeInPercent == otherSound.VolumeInPercent
-                   && sound.Delay == otherSound.Delay;
-        }
+	    private class SoundEqualityComparer : IEqualityComparer<ISound>
+	    {
+		    public bool Equals(ISound sound, ISound otherSound)
+		    {
+				return sound.IsLooped == otherSound.IsLooped
+				   && sound.FileName == otherSound.FileName
+				   && sound.Name == otherSound.Name
+				   && sound.VolumeInPercent == otherSound.VolumeInPercent
+				   && sound.Delay == otherSound.Delay;
+			}
+
+		    public int GetHashCode(ISound obj)
+		    {
+			    return 0;
+		    }
+	    }
     }
 }
