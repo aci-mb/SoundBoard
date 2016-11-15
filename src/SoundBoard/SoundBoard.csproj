@@ -244,8 +244,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del $(TargetDir)*.xml
-del $(TargetDir)*.pdb
+    <PostBuildEvent>if $(ConfigurationName) == Release del $(TargetDir)*.xml
+if $(ConfigurationName) == Release del $(TargetDir)*.pdb
 rd /S /Q $(TargetDir)en
 rd /S /Q $(TargetDir)es
 rd /S /Q $(TargetDir)fr
