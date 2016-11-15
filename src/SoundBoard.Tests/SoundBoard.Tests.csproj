@@ -82,7 +82,6 @@
     <Compile Include="Helpers\TypedValueConverterBaseTests.cs" />
     <Compile Include="Helpers\BooleanToToggleTextConverterTests.cs" />
     <Compile Include="Model\CsCoreSoundTests.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\DialogViewModelTests.cs" />
     <Compile Include="Services\SoundImplementation\CsCore\CsCoreSoundFactoryTests.cs" />

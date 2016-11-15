@@ -18,7 +18,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="24"/>
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="1">
+	    <TextBlock Text="{Binding Prompt}" Grid.ColumnSpan="1" Margin="10" Foreground="{DynamicResource TextBrush}"/>
+	    <DockPanel Grid.Row="1">
             <Button Command="{Binding CancelCommand, Mode=OneWay}" IsCancel="True" TabIndex="2" Margin="0" Width="24" DockPanel.Dock="Right">
                 <Button.Background>
                     <ImageBrush ImageSource="appbar.close.png"/>
@@ -31,6 +32,5 @@
             </Button>
             <TextBox x:Name="TextBoxName" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="0" Margin="0"/>
         </DockPanel>
-        <TextBlock Text="{Binding Prompt}" Grid.ColumnSpan="1" Margin="10" Foreground="{DynamicResource TextBrush}"/>
     </Grid>
 </Window>

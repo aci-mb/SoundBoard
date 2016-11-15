@@ -356,8 +356,6 @@
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
         <Setter Property="Template" Value="{DynamicResource RadioButtonTemplate}" />
-        <Style.Triggers>
-        </Style.Triggers>
     </Style>
 
     <ControlTemplate x:Key="RadioButtonTemplate" TargetType="{x:Type RadioButton}">
@@ -1305,8 +1303,6 @@
     </ControlTemplate>
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
         <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
-        <ControlTemplate.Triggers>
-        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style TargetType="{x:Type ComboBox}">

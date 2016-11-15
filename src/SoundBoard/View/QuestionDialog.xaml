@@ -2,9 +2,10 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:xc="clr-namespace:SoundBoard.Helpers"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:ViewModel="clr-namespace:SoundBoard.ViewModel" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-	xmlns:resx="clr-namespace:SoundBoard.Properties"
-
+	xmlns:viewModel="clr-namespace:SoundBoard.ViewModel"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
     x:Class="SoundBoard.View.QuestionDialog"
 	x:Name="Window"
 	Title="{Binding Title}"
@@ -12,10 +13,11 @@
 	MaxHeight="{Binding Height, Mode=OneWay, RelativeSource={RelativeSource Self}}"
 	MinHeight="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
 	WindowStartupLocation="CenterOwner" Background="{DynamicResource ControlBackgroundBrush}"
-	SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
+	SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
+>
 
 	<Window.Resources>
-		<ViewModel:QuestionDialogViewModel x:Key="QuestionDialogViewModelDataSource" d:IsDataSource="True"/>
+		<viewModel:QuestionDialogViewModel x:Key="QuestionDialogViewModelDataSource" d:IsDataSource="True"/>
 	</Window.Resources>
 	<Window.DataContext>
 		<Binding Source="{StaticResource QuestionDialogViewModelDataSource}"/>
@@ -26,6 +28,7 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="24"/>
 		</Grid.RowDefinitions>
+		<TextBlock Text="{Binding Question}" Grid.ColumnSpan="1" Margin="10" Foreground="{DynamicResource TextBrush}"/>
 		<StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
             <Button Name="YesButton" Command="{Binding OkCommand, Mode=OneWay}" IsDefault="True" TabIndex="1" IsEnabled="{Binding IsNameValid}" Height="24" Width="24">
                 <Button.Background>
@@ -38,6 +41,5 @@
                 </Button.Background>
             </Button>
         </StackPanel>
-		<TextBlock Text="{Binding Question}" Grid.ColumnSpan="1" Margin="10" Foreground="{DynamicResource TextBrush}"/>
 	</Grid>
 </Window>

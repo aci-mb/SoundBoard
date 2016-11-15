@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using SoundBoard.Model;
 using SoundBoard.Annotations;
 
 namespace SoundBoard.Model

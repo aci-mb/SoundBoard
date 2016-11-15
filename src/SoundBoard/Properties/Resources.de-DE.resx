@@ -164,59 +164,8 @@
   <data name="lvColumnVolume_Header" xml:space="preserve">
     <value>Lautstärke</value>
   </data>
-  <data name="MainWindowViewModel_AddSounds___flac" xml:space="preserve">
-    <value>*.flac</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds___it" xml:space="preserve">
-    <value>*.it</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds___mod" xml:space="preserve">
-    <value>*.mod</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds___mp3" xml:space="preserve">
-    <value>*.mp3</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds___ogg" xml:space="preserve">
-    <value>*.ogg</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds___s3d" xml:space="preserve">
-    <value>*.s3d</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds___wav" xml:space="preserve">
-    <value>*.wav</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds___xm" xml:space="preserve">
-    <value>*.xm</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds__Supported_Files_Separator" xml:space="preserve">
-    <value>;</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_Amiga_Modules" xml:space="preserve">
-    <value>Amiga Modules</value>
-  </data>
   <data name="MainWindowViewModel_AddSounds_Choose_sound_files_to_add" xml:space="preserve">
     <value>Neue Sound Dateien auswählen</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_Fast_Tracker_2" xml:space="preserve">
-    <value>Fast Tracker 2</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_Free_Lossless_Audio_Codec" xml:space="preserve">
-    <value>Free Lossless Audio Codec</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_Impulse_Tracker" xml:space="preserve">
-    <value>Impulse Tracker</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_MPEG_1_Audio_Layer_3" xml:space="preserve">
-    <value>MPEG-1 Audio Layer 3</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_Ogg_Vorbis" xml:space="preserve">
-    <value>Ogg Vorbis</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_RIFF_WAVE" xml:space="preserve">
-    <value>RIFF WAVE</value>
-  </data>
-  <data name="MainWindowViewModel_AddSounds_Scream_Tracker_3" xml:space="preserve">
-    <value>Scream Tracker 3</value>
   </data>
   <data name="MainWindowViewModel_AddSounds_Supported_Files" xml:space="preserve">
     <value>Unterstützte Datei-Typen</value>
@@ -244,5 +193,8 @@
   </data>
   <data name="SoundContextMenuCommands_RenameSound_Rename_sound" xml:space="preserve">
     <value>Sound umbenennen</value>
+  </data>
+	<data name="MainWindowViewModel_AddSounds__Supported_Files_Separator" xml:space="preserve">
+    <value>;</value>
   </data>
 </root>

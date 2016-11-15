@@ -114,6 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Annotations\Annotations.cs" />
     <Compile Include="Helpers\ListViewStretchedColumnWidthConverter.cs" />
     <Compile Include="Helpers\DoubleToGridLengthConverter.cs" />
     <Compile Include="Helpers\TimeSpanToDoubleSecondsConverter.cs" />
@@ -130,7 +131,6 @@
     <Compile Include="Model\SoundStateChangedEventArgs.cs" />
     <Compile Include="Model\XmlSoundBoard.cs" />
     <Compile Include="Model\XmlSound.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
