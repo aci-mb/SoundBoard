@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 using SoundBoard.Model;
 using SoundBoard.Services;
 
@@ -19,7 +21,7 @@ namespace SoundBoard.ViewModel.Design
 					new DesignModeSound
 					{
 						Name = "Sample Sound #1",
-						Length = TimeSpan.Parse("0:12:23"),
+						Length = TimeSpan.Parse("1:12:23"),
 						Delay = TimeSpan.FromSeconds(2),
 						IsLooped = true,
 						VolumeInPercent = 50
@@ -54,7 +56,7 @@ namespace SoundBoard.ViewModel.Design
 					new DesignModeSound
 					{
 						Name = "Sample Sound #1",
-						Length = TimeSpan.Parse("0:12:23"),
+						Length = TimeSpan.Parse("1:12:23"),
 						Delay = TimeSpan.FromSeconds(2),
 						IsLooped = true,
 						VolumeInPercent = 50,

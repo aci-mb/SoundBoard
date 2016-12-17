@@ -98,9 +98,9 @@
 					<TextBlock Grid.Column="4" Margin="3" Foreground="{StaticResource TextBrush}">
 						<TextBlock.Text>
 							<MultiBinding StringFormat="{}{0:00}:{1:00} / {2:00}:{3:00}">
-								<Binding Path="PlaybackPosition.Minutes"/>
+								<Binding Path="PlaybackPosition.TotalMinutes"/>
 								<Binding Path="PlaybackPosition.Seconds"/>
-								<Binding Path="Length.Minutes"/>
+								<Binding Path="Length.TotalMinutes"/>
 								<Binding Path="Length.Seconds"/>
 							</MultiBinding>
 						</TextBlock.Text>
