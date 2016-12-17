@@ -20,7 +20,7 @@
 	MinHeight="250"
 	d:DesignHeight="600"
 	Icon="Radvisual-Holographic-My-music.ico"
-    WindowStartupLocation="CenterScreen" d:DataContext="{d:DesignInstance {x:Type design:DesignMainWindowViewModel}, IsDesignTimeCreatable=True}" >
+    WindowStartupLocation="CenterScreen" d:DataContext="{d:DesignInstance {x:Type design:DesignMainWindowViewModel}, IsDesignTimeCreatable=True}" DataContext="{DynamicResource MainWindowViewModelDataSource}" >
 	<Window.Resources>
 		<ResourceDictionary>
 			<helpers:TimeSpanToDoubleSecondsConverter x:Key="TimeSpanToDoubleSecondsConverter"/>
@@ -45,7 +45,10 @@
 							</Image.Effect>
 						</Image>
 
-						<Label x:Name="textBlock" Content="{Binding Name}" ToolTip="{Binding FileName}">
+						<Label x:Name="textBlock">
+							<Label.Content>
+								<TextBlock Text="{Binding Name}" ToolTip="{Binding FileName}" TextTrimming="CharacterEllipsis"/>
+							</Label.Content>
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="MouseDoubleClick">
 									<i:InvokeCommandAction Command="{Binding Commands.ActivateSingleSoundCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=textBlock}"/>
@@ -61,22 +64,22 @@
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="100"/>
 						<ColumnDefinition Width="Auto"/>
 					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition Height="Auto"/>
-					</Grid.RowDefinitions>
-					<Image Source="appbar.clock.png" Height="17" Width="17"  Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" />
-					<Label Grid.Row="0" Grid.Column="1" x:Name="Delay" Content="{Binding Delay.TotalSeconds}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,0" ContentStringFormat="s" />
-					<Label Grid.Row="0" Grid.Column="2" x:Name="textBlock" Content="{Binding Name}" ToolTip="{Binding FileName}" HorizontalContentAlignment="Stretch" Background="Red">
+					<Image VerticalAlignment="Center" Source="appbar.clock.png" Height="15" Width="15"  Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" />
+					<Label Grid.Column="1" x:Name="Delay" Content="{Binding Delay.TotalSeconds}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,10,0" ContentStringFormat="s" />
+					<Label Grid.Column="2" x:Name="textBlock" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Background="Red">
+						<Label.Content>
+							<TextBlock VerticalAlignment="Stretch" Text="{Binding Name}" ToolTip="{Binding FileName}" TextTrimming="CharacterEllipsis"/>
+						</Label.Content>
 						<i:Interaction.Triggers>
 							<i:EventTrigger EventName="MouseDoubleClick">
 								<i:InvokeCommandAction Command="{Binding Commands.DeactivateSingleSoundCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=textBlock}"/>
 							</i:EventTrigger>
 						</i:Interaction.Triggers>
 					</Label>
-					<Slider Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="3" Maximum="{Binding Length.TotalSeconds}" Value="{Binding PlaybackPositionInSeconds}">
+					<Slider Grid.Column="3" Margin="3" Maximum="{Binding Length.TotalSeconds}" Value="{Binding PlaybackPositionInSeconds}">
 						<Slider.ToolTip>
 							<ToolTip>
 								<TextBlock>
@@ -92,7 +95,7 @@
 							</ToolTip>
 						</Slider.ToolTip>
 					</Slider>
-					<TextBlock Grid.Row="1" Grid.Column="3" Foreground="{StaticResource TextBrush}">
+					<TextBlock Grid.Column="4" Margin="3" Foreground="{StaticResource TextBrush}">
 						<TextBlock.Text>
 							<MultiBinding StringFormat="{}{0:00}:{1:00} / {2:00}:{3:00}">
 								<Binding Path="PlaybackPosition.Minutes"/>
