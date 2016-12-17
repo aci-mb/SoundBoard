@@ -10,61 +10,101 @@
     xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
 	xmlns:viewModel="clr-namespace:SoundBoard.ViewModel"
     xmlns:resx="clr-namespace:SoundBoard.Properties"
+	xmlns:design="clr-namespace:SoundBoard.ViewModel.Design"
 	x:Name="window"
     mc:Ignorable="d" x:Class="SoundBoard.View.MainWindow"
 	Title="Acillatem Sound Board"
-	Height="450.042"
+	Height="550"
 	Width="{Binding Width, Mode=TwoWay, Source={x:Static resx:Settings.Default}}"
 	MinWidth="600"
 	MinHeight="250"
+	d:DesignHeight="600"
 	Icon="Radvisual-Holographic-My-music.ico"
-    WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <ResourceDictionary>
-        	<helpers:TimeSpanToDoubleSecondsConverter x:Key="TimeSpanToDoubleSecondsConverter"/>
+    WindowStartupLocation="CenterScreen" d:DataContext="{d:DesignInstance {x:Type design:DesignMainWindowViewModel}, IsDesignTimeCreatable=True}" >
+	<Window.Resources>
+		<ResourceDictionary>
+			<helpers:TimeSpanToDoubleSecondsConverter x:Key="TimeSpanToDoubleSecondsConverter"/>
 			<Style x:Key="ListViewItem" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
 				<Setter Property="Height" Value="32"/>
 			</Style>
 			<helpers:DoubleToGridLengthConverter x:Key="DoubleToGridLengthConverter"/>
-            <viewModel:MainWindowViewModel x:Key="MainWindowViewModelDataSource" d:IsDataSource="True"/>
-            <converters:TimeSpanToVisibilityConverter x:Key="TimeSpanToVisibilityConverter"/>
-        	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-            <DataTemplate x:Key="SoundBoardTemplate">
-            	<StackPanel>
-            		<TextBlock Text="{Binding Name}" />
-            	</StackPanel>
-            </DataTemplate>
+			<viewModel:MainWindowViewModel x:Key="MainWindowViewModelDataSource" d:IsDataSource="True"/>
+			<converters:TimeSpanToVisibilityConverter x:Key="TimeSpanToVisibilityConverter"/>
+			<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+			<DataTemplate x:Key="SoundBoardTemplate">
+				<StackPanel>
+					<TextBlock Text="{Binding Name}" />
+				</StackPanel>
+			</DataTemplate>
 			<DataTemplate x:Key="SoundColumnNameTemplate">
-				<DockPanel>
-					<Image VerticalAlignment="Center" Height="24" Width="24" Source="appbar.warning.circle.png" ToolTip="{Binding ErrorInfo.ErrorMessage}" Stretch="Fill" Visibility="{Binding ErrorInfo.HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
-						<Image.Effect>
-							<DropShadowEffect/>
-						</Image.Effect>
-					</Image>
+				<StackPanel>
+					<DockPanel>
+						<Image VerticalAlignment="Center" Height="24" Width="24" Source="appbar.warning.circle.png" ToolTip="{Binding ErrorInfo.ErrorMessage}" Stretch="Fill" Visibility="{Binding ErrorInfo.HasError, Converter={StaticResource BooleanToVisibilityConverter}}">
+							<Image.Effect>
+								<DropShadowEffect/>
+							</Image.Effect>
+						</Image>
 
-					<Label x:Name="textBlock" Content="{Binding Name}" ToolTip="{Binding FileName}">
+						<Label x:Name="textBlock" Content="{Binding Name}" ToolTip="{Binding FileName}">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="MouseDoubleClick">
+									<i:InvokeCommandAction Command="{Binding Commands.ActivateSingleSoundCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=textBlock}"/>
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</Label>
+					</DockPanel>
+				</StackPanel>
+			</DataTemplate>
+			<DataTemplate x:Key="ActiveSoundColumnNameTemplate">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+					<Image Source="appbar.clock.png" Height="17" Width="17"  Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" />
+					<Label Grid.Row="0" Grid.Column="1" x:Name="Delay" Content="{Binding Delay.TotalSeconds}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,0" ContentStringFormat="s" />
+					<Label Grid.Row="0" Grid.Column="2" x:Name="textBlock" Content="{Binding Name}" ToolTip="{Binding FileName}" HorizontalContentAlignment="Stretch" Background="Red">
 						<i:Interaction.Triggers>
 							<i:EventTrigger EventName="MouseDoubleClick">
-								<i:InvokeCommandAction Command="{Binding Commands.ActivateSingleSoundCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=textBlock}"/>
+								<i:InvokeCommandAction Command="{Binding Commands.DeactivateSingleSoundCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=textBlock}"/>
 							</i:EventTrigger>
 						</i:Interaction.Triggers>
 					</Label>
-				</DockPanel>
+					<Slider Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="3" Maximum="{Binding Length.TotalSeconds}" Value="{Binding PlaybackPositionInSeconds}">
+						<Slider.ToolTip>
+							<ToolTip>
+								<TextBlock>
+									<TextBlock.Text>
+										<MultiBinding StringFormat="{}{0:00}:{1:00} / {2:00}:{3:00}">
+											<Binding Path="PlaybackPosition.Minutes"/>
+											<Binding Path="PlaybackPosition.Seconds"/>
+											<Binding Path="Length.Minutes"/>
+											<Binding Path="Length.Seconds"/>
+										</MultiBinding>
+									</TextBlock.Text>
+								</TextBlock>
+							</ToolTip>
+						</Slider.ToolTip>
+					</Slider>
+					<TextBlock Grid.Row="1" Grid.Column="3" Foreground="{StaticResource TextBrush}">
+						<TextBlock.Text>
+							<MultiBinding StringFormat="{}{0:00}:{1:00} / {2:00}:{3:00}">
+								<Binding Path="PlaybackPosition.Minutes"/>
+								<Binding Path="PlaybackPosition.Seconds"/>
+								<Binding Path="Length.Minutes"/>
+								<Binding Path="Length.Seconds"/>
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
+				</Grid>
 			</DataTemplate>
-            <DataTemplate x:Key="ActiveSoundColumnNameTemplate">
-                <DockPanel>
-                    <Image Source="appbar.clock.png" Height="17" Width="17"  Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" />
-					<Label x:Name="Delay" Content="{Binding Delay.TotalSeconds}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,0" ContentStringFormat="s" />
-                    <Label x:Name="textBlock" Content="{Binding Name}" ToolTip="{Binding FileName}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding Commands.DeactivateSingleSoundCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}" CommandParameter="{Binding DataContext, ElementName=textBlock}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </Label>
-                </DockPanel>
-            </DataTemplate>
-	        <DataTemplate x:Key="SoundColumnIsLoopedTemplate">
+			<DataTemplate x:Key="SoundColumnIsLoopedTemplate">
 				<CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsLooped, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 			</DataTemplate>
 
@@ -76,17 +116,17 @@
 			</DataTemplate>
 
 			<DataTemplate x:Key="SoundColumnDelayTemplate">
-                <xctk:DoubleUpDown Minimum="0" Value="{Binding Delay, Converter={StaticResource TimeSpanToDoubleSecondsConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsManipulationEnabled="True" ParsingNumberStyle="AllowDecimalPoint" Background="Transparent" BorderBrush="{DynamicResource NormalBorderBrush}" Foreground="{DynamicResource TextBrush}"/>
+				<xctk:DoubleUpDown Minimum="0" Value="{Binding Delay, Converter={StaticResource TimeSpanToDoubleSecondsConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsManipulationEnabled="True" ParsingNumberStyle="AllowDecimalPoint" Background="Transparent" BorderBrush="{DynamicResource NormalBorderBrush}" Foreground="{DynamicResource TextBrush}"/>
 			</DataTemplate>
-	        <helpers:ListViewStretchedColumnWidthConverter x:Key="ListViewActualWidthToRemainingColumnWidthConverter" />
-        </ResourceDictionary>
-    </Window.Resources>
+			<helpers:ListViewStretchedColumnWidthConverter x:Key="ListViewActualWidthToRemainingColumnWidthConverter" />
+		</ResourceDictionary>
+	</Window.Resources>
 	<i:Interaction.Triggers>
 		<i:EventTrigger EventName="Closing">
 			<i:InvokeCommandAction Command="{Binding Commands.ShutdownAppCommand, Mode=OneWay, Source={StaticResource MainWindowViewModelDataSource}}"/>
 		</i:EventTrigger>
 	</i:Interaction.Triggers>
-	<Grid x:Name="WindowGrid" DataContext="{Binding Source={StaticResource MainWindowViewModelDataSource}}">
+	<Grid x:Name="WindowGrid">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="{Binding SoundBoardSoundsHeight, Converter={StaticResource DoubleToGridLengthConverter}, Mode=TwoWay, Source={x:Static resx:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
 			<RowDefinition Height="10"/>
@@ -152,20 +192,22 @@
 									<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 								</Style>
 							</ListView.Resources>
+
 							<ListView.View>
 								<GridView AllowsColumnReorder="False">
 									<GridViewColumn x:Name="lvColumnName" Header="{x:Static resx:Resources.lvColumnName_Header}" CellTemplate="{StaticResource SoundColumnNameTemplate}">
-                                        <GridViewColumn.Width>
-                                            <MultiBinding Converter="{StaticResource ListViewActualWidthToRemainingColumnWidthConverter}">
-                                                <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}"/>
-                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}"/>
-                                                <Binding ElementName="lvColumnName"/>
-                                            </MultiBinding>
-                                        </GridViewColumn.Width>
-                                    </GridViewColumn>
-								    <GridViewColumn x:Name="lvColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}"/>
+										<GridViewColumn.Width>
+											<MultiBinding Converter="{StaticResource ListViewActualWidthToRemainingColumnWidthConverter}">
+												<Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType={x:Type ListView}, Mode=FindAncestor}"/>
+												<Binding RelativeSource="{RelativeSource AncestorType={x:Type ListView}, Mode=FindAncestor}"/>
+												<Binding ElementName="lvColumnName"/>
+											</MultiBinding>
+										</GridViewColumn.Width>
+									</GridViewColumn>
+									<GridViewColumn x:Name="lvColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}"/>
 									<GridViewColumn x:Name="lvColumnVolume" Header="{x:Static resx:Resources.lvColumnVolume_Header}" CellTemplate="{DynamicResource SoundColumnVolumeTemplate}" Width="100"/>
 									<GridViewColumn x:Name="lvColumnDelay" Header="{x:Static resx:Resources.lvColumnDelay_Header}" CellTemplate="{DynamicResource SoundColumnDelayTemplate}"/>
+
 								</GridView>
 							</ListView.View>
 							<ListView.ContextMenu>
@@ -193,85 +235,85 @@
 			<GridSplitter.BorderBrush>
 				<SolidColorBrush Color="{DynamicResource WhiteColor}"/>
 			</GridSplitter.BorderBrush>
-            <GridSplitter.Style>
-                <Style TargetType="GridSplitter">
-                    <Setter Property="Background">
-                        <Setter.Value>
-                            <SolidColorBrush Color="{DynamicResource HoverColor}"/>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush EndPoint="1,0" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
-                                        <GradientStop Color="{DynamicResource HoverColor}" Offset="0"/>
-                                        <GradientStop Color="{DynamicResource TopGradientHoverColor}" Offset="0.5"/>
-                                        <GradientStop Color="{DynamicResource HoverColor}" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsDragging" Value="True">
-                            <Setter Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush EndPoint="1,0" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
-                                        <GradientStop Color="{DynamicResource HoverColor}" Offset="0"/>
-                                        <GradientStop Color="{DynamicResource TopGradientSelectColor}" Offset="0.5"/>
-                                        <GradientStop Color="{DynamicResource HoverColor}" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </GridSplitter.Style>
-        </GridSplitter>
+			<GridSplitter.Style>
+				<Style TargetType="{x:Type GridSplitter}">
+					<Setter Property="Background">
+						<Setter.Value>
+							<SolidColorBrush Color="{DynamicResource HoverColor}"/>
+						</Setter.Value>
+					</Setter>
+					<Style.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Background">
+								<Setter.Value>
+									<LinearGradientBrush EndPoint="1,0" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
+										<GradientStop Color="{DynamicResource HoverColor}" Offset="0"/>
+										<GradientStop Color="{DynamicResource TopGradientHoverColor}" Offset="0.5"/>
+										<GradientStop Color="{DynamicResource HoverColor}" Offset="1"/>
+									</LinearGradientBrush>
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+						<Trigger Property="IsDragging" Value="True">
+							<Setter Property="Background">
+								<Setter.Value>
+									<LinearGradientBrush EndPoint="1,0" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
+										<GradientStop Color="{DynamicResource HoverColor}" Offset="0"/>
+										<GradientStop Color="{DynamicResource TopGradientSelectColor}" Offset="0.5"/>
+										<GradientStop Color="{DynamicResource HoverColor}" Offset="1"/>
+									</LinearGradientBrush>
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</GridSplitter.Style>
+		</GridSplitter>
 		<GroupBox Header="{x:Static resx:Resources.gbActiveSounds_Header}" Grid.Row="2">
 			<Grid x:Name="ActiveSoundsGrid">
-                <ListView x:Name="ActiveSoundsListView" Grid.Column="0" ItemsSource="{Binding SoundService.ActiveSounds}"
+				<ListView x:Name="ActiveSoundsListView" Grid.Column="0" ItemsSource="{Binding SoundService.ActiveSounds}"
 							SelectedItem="{Binding SelectedActiveSound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 							SelectionMode="Extended"
 							dragDrop:DragDrop.DropHandler="{Binding}"
 					dragDrop:DragDrop.IsDropTarget="True"
 					 ItemContainerStyle="{DynamicResource ListViewItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListView.Resources>
-                        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListView.Resources>
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn x:Name="lvActiveSoundsColumnName" Header="{x:Static resx:Resources.lvColumnName_Header}" CellTemplate="{StaticResource ActiveSoundColumnNameTemplate}">
-                                <GridViewColumn.Width>
-                                    <MultiBinding Converter="{StaticResource ListViewActualWidthToRemainingColumnWidthConverter}">
-                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}"/>
-                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}"/>
-                                        <Binding ElementName="lvActiveSoundsColumnName"/>
-                                    </MultiBinding>
-                                </GridViewColumn.Width>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="lvActiveSoundsColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}"/>
-                            <GridViewColumn x:Name="lvActiveSoundsColumnVolume" Header="{x:Static resx:Resources.lvColumnVolume_Header}" CellTemplate="{DynamicResource SoundColumnVolumeTemplate}" Width="100"/>
-                        </GridView>
-                    </ListView.View>
-                    <ListView.ContextMenu>
-                        <Binding Mode="OneWay">
-                            <Binding.Source>
-                                <ContextMenu ItemsSource="{Binding ActiveSoundContextMenuCommands.Commands, Source={StaticResource MainWindowViewModelDataSource}}">
-                                    <ContextMenu.ItemContainerStyle>
-                                        <Style TargetType="{x:Type MenuItem}">
-                                            <Setter Property="CommandParameter" Value="{Binding PlacementTarget.SelectedItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
-                                            <Setter Property="Command" Value="{Binding Command}" />
-                                            <Setter Property="Header" Value="{Binding Name}" />
-                                            <Setter Property="Icon" Value="{Binding Icon}" />
-                                        </Style>
-                                    </ContextMenu.ItemContainerStyle>
-                                </ContextMenu>
-                            </Binding.Source>
-                        </Binding>
-                    </ListView.ContextMenu>
-                </ListView>
+					<ListView.Resources>
+						<Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						</Style>
+					</ListView.Resources>
+					<ListView.View>
+						<GridView>
+							<GridViewColumn x:Name="lvActiveSoundsColumnName" Header="{x:Static resx:Resources.lvColumnName_Header}" CellTemplate="{StaticResource ActiveSoundColumnNameTemplate}">
+								<GridViewColumn.Width>
+									<MultiBinding Converter="{StaticResource ListViewActualWidthToRemainingColumnWidthConverter}">
+										<Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType={x:Type ListView}, Mode=FindAncestor}"/>
+										<Binding RelativeSource="{RelativeSource AncestorType={x:Type ListView}, Mode=FindAncestor}"/>
+										<Binding ElementName="lvActiveSoundsColumnName"/>
+									</MultiBinding>
+								</GridViewColumn.Width>
+							</GridViewColumn>
+							<GridViewColumn x:Name="lvActiveSoundsColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}"/>
+							<GridViewColumn x:Name="lvActiveSoundsColumnVolume" Header="{x:Static resx:Resources.lvColumnVolume_Header}" CellTemplate="{DynamicResource SoundColumnVolumeTemplate}" Width="100"/>
+						</GridView>
+					</ListView.View>
+					<ListView.ContextMenu>
+						<Binding Mode="OneWay">
+							<Binding.Source>
+								<ContextMenu ItemsSource="{Binding ActiveSoundContextMenuCommands.Commands, Source={StaticResource MainWindowViewModelDataSource}}">
+									<ContextMenu.ItemContainerStyle>
+										<Style TargetType="{x:Type MenuItem}">
+											<Setter Property="CommandParameter" Value="{Binding PlacementTarget.SelectedItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+											<Setter Property="Command" Value="{Binding Command}" />
+											<Setter Property="Header" Value="{Binding Name}" />
+											<Setter Property="Icon" Value="{Binding Icon}" />
+										</Style>
+									</ContextMenu.ItemContainerStyle>
+								</ContextMenu>
+							</Binding.Source>
+						</Binding>
+					</ListView.ContextMenu>
+				</ListView>
 			</Grid>
 		</GroupBox>
 	</Grid>

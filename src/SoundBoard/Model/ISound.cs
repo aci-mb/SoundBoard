@@ -6,6 +6,10 @@ namespace SoundBoard.Model
     {
 		SoundState State { get; }
 
+		TimeSpan Length { get; }
+		TimeSpan PlaybackPosition { get; set; }
+		int PlaybackPositionInSeconds { get; set; }
+
 		void Play();
 	    void Pause();
 	    void Stop();

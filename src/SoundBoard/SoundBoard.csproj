@@ -139,6 +139,7 @@
     <Compile Include="Services\IObservableSoundService.cs" />
     <Compile Include="ViewModel\ContainerConfigurator.cs" />
     <Compile Include="ViewModel\Converters\TimeSpanToVisibilityConverter.cs" />
+    <Compile Include="ViewModel\Design\DesignMainWindowViewModel.cs" />
     <Compile Include="ViewModel\QuestionDialogViewModel.cs" />
     <Compile Include="ViewModel\ActiveSoundContextMenuCommands.cs" />
     <Compile Include="Helpers\BooleanToToggleTextConverter.cs" />
@@ -174,7 +175,6 @@
     <Compile Include="Helpers\ViewModelBase.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Model\SoundBoard.cs" />
-    <Compile Include="Services\DesignModeSoundBoardRepository.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\ISoundBoardRepository.cs" />

@@ -130,9 +130,7 @@ namespace SoundBoard.ViewModel
 
 		private static ISoundBoardRepository CreateSoundBoardRepository(ISoundFactory soundFactory)
 		{
-			return IsInDesignMode
-				? (ISoundBoardRepository) new DesignModeSoundBoardRepository()
-				: new XmlSerializingSoundBoardRepository(soundFactory);
+			return new XmlSerializingSoundBoardRepository(soundFactory);
 		}
 
 		public class CommandsRepository
