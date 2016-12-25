@@ -315,8 +315,8 @@
 								</GridViewColumn.Width>
 							</GridViewColumn>
 							<GridViewColumn x:Name="lvActiveSoundsColumnPlaybackPosition" Header="{x:Static resx:Resources.lvActiveSoundsColumnPlaybackPosition_Header}" CellTemplate="{DynamicResource ActiveSoundColumnPlaybackPositionTemplate}" Width="200"/>
-							<GridViewColumn x:Name="lvActiveSoundsColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}"/>
 							<GridViewColumn x:Name="lvActiveSoundsColumnVolume" Header="{x:Static resx:Resources.lvColumnVolume_Header}" CellTemplate="{DynamicResource SoundColumnVolumeTemplate}" Width="100"/>
+							<GridViewColumn x:Name="lvActiveSoundsColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}" Width="125"/>
 						</GridView>
 					</ListView.View>
 					<ListView.ContextMenu>
