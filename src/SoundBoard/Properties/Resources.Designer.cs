@@ -170,6 +170,15 @@ namespace SoundBoard.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
+        public static string lvActiveSoundsColumnPlaybackPosition_Header {
+            get {
+                return ResourceManager.GetString("lvActiveSoundsColumnPlaybackPosition_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delay.
         /// </summary>
         public static string lvColumnDelay_Header {
@@ -184,6 +193,15 @@ namespace SoundBoard.Properties {
         public static string lvColumnIsLooped_Header {
             get {
                 return ResourceManager.GetString("lvColumnIsLooped_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length.
+        /// </summary>
+        public static string lvColumnLength_Header {
+            get {
+                return ResourceManager.GetString("lvColumnLength_Header", resourceCulture);
             }
         }
         

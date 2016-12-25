@@ -198,4 +198,10 @@
   <data name="SoundContextMenuCommands_RenameSound_Rename_sound" xml:space="preserve">
     <value>Rename sound</value>
   </data>
+	<data name="lvColumnLength_Header" xml:space="preserve">
+    <value>Length</value>
+  </data>
+	<data name="lvActiveSoundsColumnPlaybackPosition_Header" xml:space="preserve">
+    <value>Position</value>
+  </data>
 </root>

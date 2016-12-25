@@ -1,4 +1,5 @@
-﻿<root>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
   <!-- 
     Microsoft ResX Schema 
     
@@ -194,7 +195,13 @@
   <data name="SoundContextMenuCommands_RenameSound_Rename_sound" xml:space="preserve">
     <value>Sound umbenennen</value>
   </data>
-	<data name="MainWindowViewModel_AddSounds__Supported_Files_Separator" xml:space="preserve">
+  <data name="MainWindowViewModel_AddSounds__Supported_Files_Separator" xml:space="preserve">
     <value>;</value>
+  </data>
+  <data name="lvColumnLength_Header" xml:space="preserve">
+    <value>Länge</value>
+  </data>
+  <data name="lvActiveSoundsColumnPlaybackPosition_Header" xml:space="preserve">
+    <value>Position</value>
   </data>
 </root>

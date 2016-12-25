@@ -64,12 +64,10 @@
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="100"/>
-						<ColumnDefinition Width="Auto"/>
 					</Grid.ColumnDefinitions>
 					<Image VerticalAlignment="Center" Source="appbar.clock.png" Height="15" Width="15"  Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" />
 					<Label Grid.Column="1" x:Name="Delay" Content="{Binding Delay.TotalSeconds}" Visibility="{Binding Delay, Converter={StaticResource TimeSpanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,10,0" ContentStringFormat="s" />
-					<Label Grid.Column="2" x:Name="textBlock" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Background="Red">
+					<Label Grid.Column="2" x:Name="textBlock" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center">
 						<Label.Content>
 							<TextBlock VerticalAlignment="Stretch" Text="{Binding Name}" ToolTip="{Binding FileName}" TextTrimming="CharacterEllipsis"/>
 						</Label.Content>
@@ -79,7 +77,11 @@
 							</i:EventTrigger>
 						</i:Interaction.Triggers>
 					</Label>
-					<Slider Grid.Column="3" Margin="3" Maximum="{Binding Length.TotalSeconds}" Value="{Binding PlaybackPositionInSeconds}">
+				</Grid>
+			</DataTemplate>
+			<DataTemplate x:Key="ActiveSoundColumnPlaybackPositionTemplate">
+				<StackPanel Orientation="Horizontal">
+					<Slider Width="100" Margin="3" Maximum="{Binding Length.TotalSeconds}" Value="{Binding PlaybackPositionInSeconds}">
 						<Slider.ToolTip>
 							<ToolTip>
 								<TextBlock>
@@ -95,7 +97,7 @@
 							</ToolTip>
 						</Slider.ToolTip>
 					</Slider>
-					<TextBlock Grid.Column="4" Margin="3" Foreground="{StaticResource TextBrush}">
+					<TextBlock Margin="3" Foreground="{StaticResource TextBrush}">
 						<TextBlock.Text>
 							<MultiBinding StringFormat="{}{0:00}:{1:00} / {2:00}:{3:00}">
 								<Binding Path="PlaybackPosition.TotalMinutes"/>
@@ -105,7 +107,17 @@
 							</MultiBinding>
 						</TextBlock.Text>
 					</TextBlock>
-				</Grid>
+				</StackPanel>
+			</DataTemplate>
+			<DataTemplate x:Key="SoundColumnLengthTemplate">
+				<TextBlock>
+					<TextBlock.Text>
+						<MultiBinding StringFormat="{}{0:00}:{1:00}">
+							<Binding Path="Length.TotalMinutes"/>
+							<Binding Path="Length.Seconds"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
 			</DataTemplate>
 			<DataTemplate x:Key="SoundColumnIsLoopedTemplate">
 				<CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsLooped, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -119,7 +131,7 @@
 			</DataTemplate>
 
 			<DataTemplate x:Key="SoundColumnDelayTemplate">
-				<xctk:DoubleUpDown Minimum="0" Value="{Binding Delay, Converter={StaticResource TimeSpanToDoubleSecondsConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsManipulationEnabled="True" ParsingNumberStyle="AllowDecimalPoint" Background="Transparent" BorderBrush="{DynamicResource NormalBorderBrush}" Foreground="{DynamicResource TextBrush}"/>
+				<xctk:DoubleUpDown Width="Auto" HorizontalAlignment="Center" Minimum="0" Value="{Binding Delay, Converter={StaticResource TimeSpanToDoubleSecondsConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsManipulationEnabled="True" ParsingNumberStyle="AllowDecimalPoint" Background="Transparent" BorderBrush="{DynamicResource NormalBorderBrush}" Foreground="{DynamicResource TextBrush}"/>
 			</DataTemplate>
 			<helpers:ListViewStretchedColumnWidthConverter x:Key="ListViewActualWidthToRemainingColumnWidthConverter" />
 		</ResourceDictionary>
@@ -182,6 +194,7 @@
 								</Button.Background>
 							</Button>
 						</StackPanel>
+
 						<ListView x:Name="ListView" Grid.Column="0" ItemsSource="{Binding SelectedSoundBoard.Sounds}"
 							SelectedItem="{Binding SelectedSound, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 							Height="{Binding ActualHeight, ElementName=SoundsGrid, Mode=OneWay}"
@@ -195,9 +208,13 @@
 									<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 								</Style>
 							</ListView.Resources>
-
 							<ListView.View>
 								<GridView AllowsColumnReorder="False">
+									<GridView.ColumnHeaderContainerStyle>
+										<Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
+											<Setter Property="IsHitTestVisible" Value="False"/>
+										</Style>
+									</GridView.ColumnHeaderContainerStyle>
 									<GridViewColumn x:Name="lvColumnName" Header="{x:Static resx:Resources.lvColumnName_Header}" CellTemplate="{StaticResource SoundColumnNameTemplate}">
 										<GridViewColumn.Width>
 											<MultiBinding Converter="{StaticResource ListViewActualWidthToRemainingColumnWidthConverter}">
@@ -207,9 +224,10 @@
 											</MultiBinding>
 										</GridViewColumn.Width>
 									</GridViewColumn>
+									<GridViewColumn x:Name="lvColumnLength" Header="{x:Static resx:Resources.lvColumnLength_Header}" CellTemplate="{DynamicResource SoundColumnLengthTemplate}" />
 									<GridViewColumn x:Name="lvColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}"/>
 									<GridViewColumn x:Name="lvColumnVolume" Header="{x:Static resx:Resources.lvColumnVolume_Header}" CellTemplate="{DynamicResource SoundColumnVolumeTemplate}" Width="100"/>
-									<GridViewColumn x:Name="lvColumnDelay" Header="{x:Static resx:Resources.lvColumnDelay_Header}" CellTemplate="{DynamicResource SoundColumnDelayTemplate}"/>
+									<GridViewColumn x:Name="lvColumnDelay" Header="{x:Static resx:Resources.lvColumnDelay_Header}" CellTemplate="{DynamicResource SoundColumnDelayTemplate}" Width="125"/>
 
 								</GridView>
 							</ListView.View>
@@ -296,6 +314,7 @@
 									</MultiBinding>
 								</GridViewColumn.Width>
 							</GridViewColumn>
+							<GridViewColumn x:Name="lvActiveSoundsColumnPlaybackPosition" Header="{x:Static resx:Resources.lvActiveSoundsColumnPlaybackPosition_Header}" CellTemplate="{DynamicResource ActiveSoundColumnPlaybackPositionTemplate}" Width="200"/>
 							<GridViewColumn x:Name="lvActiveSoundsColumnIsLooped" Header="{x:Static resx:Resources.lvColumnIsLooped_Header}" CellTemplate="{DynamicResource SoundColumnIsLoopedTemplate}"/>
 							<GridViewColumn x:Name="lvActiveSoundsColumnVolume" Header="{x:Static resx:Resources.lvColumnVolume_Header}" CellTemplate="{DynamicResource SoundColumnVolumeTemplate}" Width="100"/>
 						</GridView>
